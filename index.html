@@ -9,6 +9,15 @@
     </script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
     </script>
+    <script type="text/javascript">
+
+    </script>
+    <style>
+    .example_block {
+        width:20px;
+        background-color:blue;
+    }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -41,6 +50,9 @@
         <div class="jumbotron">
             <h1>I don't know.</h1>
             <p>But I will know... once this experiment ends!</p>
+        </div>
+        <div onclick="move(this.children[0])" class="example_path">
+            <div class="example_block">&nbsp;</div>
         </div>
         <div class="row">
             <div class="col-sm-6">
