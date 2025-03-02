@@ -1,4 +1,3 @@
-text
 ---
 date: 2025-03-03T00:46:28.488927
 draft: false
