@@ -2,8 +2,8 @@
 title: Links
 links:
   - title: GitHub
-    description: GitHub is the world's largest software development platform.
-    website: https://github.com
+    description: 'github.com/shrsv'
+    website: https://github.com/shrsv
     image: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
 menu:
     main: 
@@ -12,7 +12,11 @@ menu:
             icon: link
 
 comments: false
+license: false
+readingTime: false
 ---
+
+<!--
 
 To use this feature, add `links` section to frontmatter.
 
@@ -31,3 +35,4 @@ links:
 ```
 
 `image` field accepts both local and external images.
+-->
