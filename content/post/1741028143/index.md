@@ -1,7 +1,7 @@
 ---
 date: 2025-03-03 18:55:43+0000
 draft: false
-title: 'Don't Add More Garbage to the World'
+title: "Don't Add More Garbage to the World"
 categories: ['Micro']
 slug: 1741028143
 math: true
