@@ -2,6 +2,8 @@
 date = '2025-03-05T23:43:58+05:30'
 draft = false
 title = 'A Simple Tool To Quickly Find API Entry Points Across All Your Repositories'
+Categories = ['Tech']
+tags = ['api', 'liveapi', 'productivity']
 +++
 
 
