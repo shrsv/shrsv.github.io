@@ -1,8 +1,7 @@
-
 ---
 date: 2025-03-07 18:53:27+0000
 draft: false
-title: 'Mastery's Price: Paid in Life Itself'
+title: "Mastery's Price: Paid in Life Itself"
 categories: ['Micro']
 slug: 1741373607
 math: true
