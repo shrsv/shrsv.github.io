@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>History on The Learning Loom</title><link>https://shrsv.github.io/tags/history/</link><description>Recent content in History on The Learning Loom</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 09 Mar 2025 23:41:21 +0530</lastBuildDate><atom:link href="https://shrsv.github.io/tags/history/index.xml" rel="self" type="application/rss+xml"/><item><title>Rosenblatt's Perceptron (WIP)</title><link>https://shrsv.github.io/p/rosenblatts-perceptron-wip/</link><pubDate>Sun, 09 Mar 2025 23:41:21 +0530</pubDate><guid>https://shrsv.github.io/p/rosenblatts-perceptron-wip/</guid><description>&lt;p>In &lt;strong>Smithsonian National Museum of American History&lt;/strong> - the following device
+is visible:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/1.jpg"
+width="600"
+height="473"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/1_hu_1c6d17b0c660cde6.jpg 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/1_hu_57728828e9e4b4f3.jpg 1024w"
+loading="lazy"
+alt="rosenblatt perceptron in museum"
+class="gallery-image"
+data-flex-grow="126"
+data-flex-basis="304px"
+>&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/2.jpg"
+width="600"
+height="472"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/2_hu_e551eb67e49ece3.jpg 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/2_hu_9299fc94f7bdeb09.jpg 1024w"
+loading="lazy"
+alt="S (Stimuli), A (Association), R (Response)"
+class="gallery-image"
+data-flex-grow="127"
+data-flex-basis="305px"
+>&lt;/p>
+&lt;p>&lt;a class="link" href="https://americanhistory.si.edu/collections/object/nmah_334414" target="_blank" rel="noopener"
+>(src)&lt;/a>&lt;/p>
+&lt;p>The device is called the &lt;strong>Mark I Perceptron&lt;/strong>.&lt;/p>
+&lt;p>It was built in 1957.&lt;/p>
+&lt;p>The chief person behind construction of this device was &lt;a class="link" href="https://en.wikipedia.org/wiki/Frank_Rosenblatt" target="_blank" rel="noopener"
+>Frank Rosenblatt&lt;/a>&lt;/p>
+&lt;p>The device had 3 parts:&lt;/p>
+&lt;ol>
+&lt;li>Stimuli receptor monitor (S)&lt;/li>
+&lt;li>Association machinery (A)&lt;/li>
+&lt;li>Response mechanism (S)&lt;/li>
+&lt;/ol>
+&lt;p>This is almost a mechanical equivalent of what Minsky sort of talks
+about in his &lt;a class="link" href="http://aurellem.org/society-of-mind/som-5.3.html" target="_blank" rel="noopener"
+>&lt;em>Society of Mind&lt;/em>&lt;/a>:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/3.png"
+width="332"
+height="210"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/3_hu_4cc180999959f97.png 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/3_hu_bdc6114d334dcfc1.png 1024w"
+loading="lazy"
+alt="Minsky’s Description"
+class="gallery-image"
+data-flex-grow="158"
+data-flex-basis="379px"
+>&lt;/p>
+&lt;blockquote>
+&lt;p>This diagram depicts our sensory machinery as sending information to the brain, wherein it is projected on some inner mental movie screen. Then, inside that ghostly theater, a lurking Self observes the scene and then considers what to do. Finally, that Self may act — somehow reversing all those steps — to influence the real world by sending various signals back through yet another family of remote-control accessories.
+&amp;ndash; Marvin Minsky, The Society of Mind&lt;/p>&lt;/blockquote>
+&lt;p>And this is Rosenbaltt tweaking the perceptron:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/4.jpg"
+width="497"
+height="617"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/4_hu_c2e0ce1842f5f865.jpg 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/4_hu_94959b77a8a153f0.jpg 1024w"
+loading="lazy"
+alt="Rosenbaltt Working with Perceptron"
+class="gallery-image"
+data-flex-grow="80"
+data-flex-basis="193px"
+>&lt;/p>
+&lt;p>You can see the NYT reporting that the navy claimed the device
+would eventually:&lt;/p>
+&lt;blockquote>
+&lt;p>the embryo of an electronic computer today that it expects will be able to walk, talk, see, write, reproduce itself and be conscious of its existence.&lt;/p>&lt;/blockquote>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/6.png"
+width="402"
+height="552"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/6_hu_642ef1adb74d61e0.png 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/6_hu_fba8ef22cbae61f6.png 1024w"
+loading="lazy"
+alt="The Prediction"
+class="gallery-image"
+data-flex-grow="72"
+data-flex-basis="174px"
+>&lt;/p></description></item></channel></rss>
