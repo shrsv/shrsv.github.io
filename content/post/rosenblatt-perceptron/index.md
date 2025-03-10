@@ -51,7 +51,7 @@ would eventually:
 
 All these things aside, we will try to cull some ideas from Rosenblatt's original paper - accessible at [The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain](https://www.ling.upenn.edu/courses/cogs501/Rosenblatt1958.pdf)
 
-## Memory is the foundation for higher-level capabilities
+## Memory is the foundation for higher-level capabilities (but What is it?!)
 
 ![The role of memory](memory.png)
 
@@ -64,7 +64,7 @@ All these things aside, we will try to cull some ideas from Rosenblatt's origina
 R considers options on how storage may work - based on existing scholarship. The interesting scholarly decision happens right here - he picks the right architecture, the right bet so to speak.
 
 
-### The Critical Insight: R Makes a Bet
+### The Critical Insight: R Makes a Bet On the Nature of Memory
 
 Position A: Coded Representational Memory (Essentially - expecting an isolated storage of memory)
 
