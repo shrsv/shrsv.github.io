@@ -1,8 +1,7 @@
-
 ---
 date: 2025-03-13 18:11:28+0000
-draft: true
-title: "Vague Thoughts and Wasted Time"
+draft: false
+title: "Vagueness is the Enemy of Action"
 categories: ['Micro']
 slug: 1741889488
 math: true
