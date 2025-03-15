@@ -23,7 +23,7 @@ This is my TLDR after an hour of studying the topic. Any mistakes or misundersta
 - Short-term and medium-term batteries activate quickly but are mostly anaerobic (running without oxygen).
 - The long-term battery is mostly aerobic (operating with oxygen).
 
-## The Detailed Version 
+### The Detailed Version 
 
 The human body is like an iPhone with a battery pack. The only difference is that this battery pack can charge beyond 100% with an almost infinite capacity to keep adding to it.
 
@@ -33,7 +33,7 @@ The technical terms for the important battery packs are: Adipose tissue & Trigly
 
 These are stockpiled and sometimes synthesized, leading to increased volume. Stockpiling made sense in historic times when there were no guarantees about when one could get the next meal. However, with an abundance of food available today, this storage capacity is working against us.
 
-## From ADP to ATP
+### From ADP to ATP
 
 While there are many ways to stock up on adipose tissue and triglycerides, there’s only one way they get consumed: to synthesize ATP from ADP. ATP stands for adenosine triphosphate, and ADP stands for adenosine diphosphate.
 
@@ -116,7 +116,7 @@ Your body constantly **charges and discharges** all four energy stores at differ
     - Your body increases **heart rate, breathing, and oxygen transport** to keep up.
   - **In Starvation or Carb Deprivation:** The body eventually resorts to **breaking down muscle (4) for energy**, a last-resort survival mechanism.
 
-## The Computer Memory Analogy (Brilliant Stuff)
+### The Computer Memory Analogy (Brilliant Stuff)
 
 This **energy hierarchy** can be compared to a computer’s **memory hierarchy**:
 
