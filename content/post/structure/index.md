@@ -28,7 +28,7 @@ There is a structure to that - and one almost waits for one's
 favorite parts of the music. At least I do.
 
 So - our feeling of "familiarity" hints at what makes things
-meanintful to us.
+meaningful to us.
 
 Consider something like the following:
 
@@ -46,8 +46,7 @@ Why? Because we cannot figure out - "What does it mean?"
 So the biggest point of our life is that we get a feeling
 of familiarity - that we get meaning.
 
-We may be wrong sometimes as well - that's part of the adventure
-- but that sense of familiarity is what keeps us interested in
+We may be wrong sometimes as well - that's part of the adventure but that sense of familiarity is what keeps us interested in
 music, story, problems.
 
 The possibility of becoming familiar is the most alluring part
