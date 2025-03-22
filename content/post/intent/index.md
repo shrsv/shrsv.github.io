@@ -1,5 +1,5 @@
 +++
-date = '2025-03-21T20:41:21+05:30'
+date = '2025-03-22T20:41:21+05:30'
 draft = false
 title = "I Disagree With Jeff Bezos"
 categories = ['Micro']
