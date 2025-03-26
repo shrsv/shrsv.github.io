@@ -22,17 +22,11 @@ Whether it’s a project deadline, a hiring choice, or a career move, informatio
  
 ### A Deadline Misstep
 
-Once, a project deadline loomed, and a miscalculation threw everything off. 
+I remember this one time when I was knee-deep in a project with a deadline breathing down my neck. I’d done some quick mental math and thought, “Yeah, it’s tight, but we’ve got this.” I was riding this wave of optimism, feeling like everything would just magically fall into place. So, I didn’t really dig into the progress updates—just gave them a quick skim and told myself, “It’s all good, we’ll finish on time.”
 
-The timeline seemed tight but doable, based on an optimistic hunch. 
+Then the deadline rolls around, and—bam—it’s a disaster. The project’s nowhere near done. Half-baked doesn’t even cover it. And the worst part? It wasn’t my team slacking or anything. It was me. I’d totally misjudged how things were going because I never stopped to double-check my rosy assumptions against what was actually happening.
 
-Progress updates were skimmed, and the assumption held that the work would finish on time. 
-
-When the deadline hit, the project was nowhere near complete. 
-
-The error wasn’t in others’ efforts but in misjudging the situation—failing to check assumptions against reality.
-
-That lesson sparked a shift toward a more grounded approach.
+I had believed - instead of inspecting.
 
 ### Why Believing Falls Short
 
