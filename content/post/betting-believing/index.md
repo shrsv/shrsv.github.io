@@ -7,7 +7,6 @@ slug = "betting-gt-believing"
 categories = ['Micro']
 +++
 
-## Betting > Believing: A Practical Approach to Decision-Making
 
 In real-world decision-making, uncertainty is a constant. 
 
