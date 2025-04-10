@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Deeplearning on The Learning Loom</title><link>https://shrsv.github.io/tags/deeplearning/</link><description>Recent content in Deeplearning on The Learning Loom</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 12 Mar 2025 20:41:21 +0530</lastBuildDate><atom:link href="https://shrsv.github.io/tags/deeplearning/index.xml" rel="self" type="application/rss+xml"/><item><title>About HippoRAG</title><link>https://shrsv.github.io/p/about-hipporag/</link><pubDate>Wed, 12 Mar 2025 20:41:21 +0530</pubDate><guid>https://shrsv.github.io/p/about-hipporag/</guid><description>&lt;p>These are some LLM-assisted exploration notes from the paper &lt;a class="link" href="https://arxiv.org/pdf/2405.14831" target="_blank" rel="noopener"
+>HippoRAG: Neurobiologically Inspired
+Long-Term Memory for Large Language Models&lt;/a>&lt;/p>
+&lt;h2 id="the-multi-hop-problem-in-rags">The Multi-Hop Problem in RAGs
+&lt;/h2>&lt;p>The idea of &amp;ldquo;hops&amp;rdquo; are important in RAG.&lt;/p>
+&lt;p>Consider this example.&lt;/p>
+&lt;p>Question 1:&lt;/p>
+&lt;p>&lt;em>&amp;ldquo;Who wrote Hamlet?&amp;rdquo;&lt;/em>&lt;/p>
+&lt;p>→ The answer (Shakespeare) is in one document.*&lt;/p>
+&lt;p>Question 2:&lt;/p>
+&lt;p>&lt;em>&amp;ldquo;Which university did the president of OpenAI attend?&amp;rdquo;&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>Step 1: Retrieve information on who the president of OpenAI is (e.g., Greg Brockman).&lt;/li>
+&lt;li>Step 2: Retrieve information on which university Greg Brockman attended (e.g., MIT).&lt;/li>
+&lt;/ul>
+&lt;h2 id="how-hipporag-achieves-a-single-step-multi-hop-retrieval">How HippoRAG Achieves a Single-Step Multi-Hop Retrieval
+&lt;/h2>&lt;p>Traditional RAG solutions, such as IRCoT (Iterative Retrieval Chain-of-Thought) depend on &lt;em>iterative retrieval&lt;/em> - kind of like looking up docs in a loop.&lt;/p>
+&lt;p>With HippoRAG, two mechanisms are combined to compress these multiple hops into one:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Building a knowledge graph (KG)&lt;/strong> where concepts and relationships are indexed.&lt;/li>
+&lt;li>&lt;strong>Using Personalized PageRank (PPR)&lt;/strong> to retrieve relevant paths across multiple documents in one query.&lt;/li>
+&lt;/ul>
+&lt;p>The benefits of the above combination makes HippoRAG:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Faster&lt;/strong> (avoids iterative retrieval)&lt;/li>
+&lt;li>&lt;strong>More accurate&lt;/strong> (find connections that isolated retrieval steps miss)&lt;/li>
+&lt;li>&lt;strong>Cheaper&lt;/strong> (reduce API calls and computation)&lt;/li>
+&lt;/ul>
+&lt;h2 id="how-hipporag-builds-its-knowledge-graph-kg">How HippoRAG Builds Its Knowledge Graph (KG)
+&lt;/h2>&lt;p>HippoRAG constructs a &lt;strong>schemaless knowledge graph&lt;/strong> from a text corpus by leveraging &lt;strong>large language models (LLMs)&lt;/strong> for &lt;strong>Open Information Extraction (OpenIE)&lt;/strong> and retrieval encoders for linking entities. This process enables &lt;strong>multi-hop reasoning in a single retrieval step&lt;/strong>.&lt;/p>
+&lt;h4 id="1-offline-indexing-building-the-graph">&lt;strong>1. Offline Indexing (Building the Graph)&lt;/strong>
+&lt;/h4>&lt;p>This step is analogous to how the &lt;strong>human neocortex encodes memory&lt;/strong>.&lt;/p>
+&lt;p>✅ &lt;strong>Extract Knowledge Graph Triples&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Uses an &lt;strong>instruction-tuned LLM&lt;/strong> (e.g., GPT-3.5) to &lt;strong>extract subject-predicate-object triples&lt;/strong> from text.
+&lt;ul>
+&lt;li>Example:&lt;br>
+&lt;strong>Input Passage:&lt;/strong> &amp;ldquo;Steve Jobs co-founded Apple in 1976.&amp;rdquo;&lt;br>
+&lt;strong>Extracted Triples:&lt;/strong>
+&lt;ul>
+&lt;li>&lt;code>(Steve Jobs, co-founded, Apple)&lt;/code>&lt;/li>
+&lt;li>&lt;code>(Apple, founded_in, 1976)&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>✅ &lt;strong>Create Graph Nodes &amp;amp; Edges&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Nodes&lt;/strong> = extracted &lt;strong>entities (noun phrases)&lt;/strong> (e.g., &lt;em>Steve Jobs, Apple&lt;/em>).&lt;/li>
+&lt;li>&lt;strong>Edges&lt;/strong> = relationships between entities (e.g., &lt;em>co-founded&lt;/em>).&lt;/li>
+&lt;/ul>
+&lt;p>✅ &lt;strong>Synonymy Linking (Parahippocampal Processing)&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Uses &lt;strong>retrieval encoders&lt;/strong> (e.g., &lt;strong>Contriever, ColBERTv2&lt;/strong>) to &lt;strong>identify similar entities&lt;/strong> (e.g., &amp;ldquo;USA&amp;rdquo; = &amp;ldquo;United States&amp;rdquo;).&lt;/li>
+&lt;li>Creates &lt;strong>extra edges&lt;/strong> to connect synonyms, improving retrieval robustness.&lt;/li>
+&lt;/ul>
+&lt;p>✅ &lt;strong>Store the Graph&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>The final &lt;strong>knowledge graph&lt;/strong> consists of:
+&lt;ul>
+&lt;li>&lt;strong>Nodes (Entities)&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>Edges (Relations &amp;amp; Synonyms)&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>Passage Mapping&lt;/strong> (Each node is linked to the original text passage for retrieval)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="2-online-retrieval-querying-the-graph">&lt;strong>2. Online Retrieval (Querying the Graph)&lt;/strong>
+&lt;/h3>&lt;p>This step mimics the &lt;strong>hippocampus retrieving memories&lt;/strong>.&lt;/p>
+&lt;p>✅ &lt;strong>Extract Query Named Entities&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>The LLM identifies &lt;strong>key entities&lt;/strong> in the query.&lt;/li>
+&lt;li>Example: &lt;em>&amp;ldquo;Which Stanford professor works on Alzheimer&amp;rsquo;s?&amp;rdquo;&lt;/em>
+&lt;ul>
+&lt;li>Query Entities: &lt;code>{Stanford, Alzheimer’s}&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>✅ &lt;strong>Find Related Nodes in the Knowledge Graph&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Uses &lt;strong>retrieval encoders&lt;/strong> to find &lt;strong>graph nodes most similar&lt;/strong> to the query entities.&lt;/li>
+&lt;li>Example: The query &lt;code>{Stanford, Alzheimer’s}&lt;/code> matches the node &lt;code>{Thomas Südhof}&lt;/code> in the KG.&lt;/li>
+&lt;/ul>
+&lt;p>✅ &lt;strong>Personalized PageRank (PPR) for Multi-Hop Retrieval&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Runs &lt;strong>Personalized PageRank (PPR)&lt;/strong> on the graph using query nodes as &lt;strong>starting points&lt;/strong>.&lt;/li>
+&lt;li>Spreads probability over &lt;strong>connected nodes&lt;/strong>, enabling &lt;strong>multi-hop reasoning&lt;/strong>.&lt;/li>
+&lt;li>Example:
+&lt;ul>
+&lt;li>&lt;code>{Stanford}&lt;/code> → &lt;code>{Thomas Südhof}&lt;/code>&lt;/li>
+&lt;li>&lt;code>{Alzheimer’s}&lt;/code> → &lt;code>{Thomas Südhof}&lt;/code>&lt;/li>
+&lt;li>&lt;strong>Final Retrieval:&lt;/strong> Thomas Südhof is a Stanford professor working on Alzheimer’s.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>✅ &lt;strong>Retrieve &amp;amp; Rank Passages&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>The &lt;strong>most relevant passages&lt;/strong> are selected based on PPR scores.&lt;/li>
+&lt;/ul>
+&lt;h3 id="how-hipporag-uses-pagerank-to-order-results">&lt;strong>How HippoRAG Uses PageRank to Order Results&lt;/strong>
+&lt;/h3>&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>Convert Text to a Graph&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Extract &lt;strong>entities&lt;/strong> (nodes) and &lt;strong>relationships&lt;/strong> (edges).&lt;/li>
+&lt;li>Example:&lt;/li>
+&lt;/ul>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 328 41"
+>
+&lt;g transform='translate(8,16)'>
+&lt;text text-anchor='middle' x='0' y='4' fill='currentColor' style='font-size:1em'>(&lt;/text>
+&lt;text text-anchor='middle' x='0' y='20' fill='currentColor' style='font-size:1em'>(&lt;/text>
+&lt;text text-anchor='middle' x='8' y='4' fill='currentColor' style='font-size:1em'>S&lt;/text>
+&lt;text text-anchor='middle' x='8' y='20' fill='currentColor' style='font-size:1em'>T&lt;/text>
+&lt;text text-anchor='middle' x='16' y='4' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='16' y='20' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='24' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='24' y='20' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='32' y='4' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='32' y='20' fill='currentColor' style='font-size:1em'>m&lt;/text>
+&lt;text text-anchor='middle' x='40' y='4' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='40' y='20' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='48' y='4' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='48' y='20' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='56' y='4' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='64' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='64' y='20' fill='currentColor' style='font-size:1em'>S&lt;/text>
+&lt;text text-anchor='middle' x='72' y='4' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='72' y='20' fill='currentColor' style='font-size:1em'>ü&lt;/text>
+&lt;text text-anchor='middle' x='80' y='20' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='88' y='4' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='88' y='20' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='96' y='4' fill='currentColor' style='font-size:1em'>m&lt;/text>
+&lt;text text-anchor='middle' x='96' y='20' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='104' y='4' fill='currentColor' style='font-size:1em'>p&lt;/text>
+&lt;text text-anchor='middle' x='104' y='20' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='112' y='4' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='112' y='20' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='120' y='4' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='128' y='4' fill='currentColor' style='font-size:1em'>y&lt;/text>
+&lt;text text-anchor='middle' x='128' y='20' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='136' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='136' y='20' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='144' y='4' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='144' y='20' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='152' y='20' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='160' y='4' fill='currentColor' style='font-size:1em'>T&lt;/text>
+&lt;text text-anchor='middle' x='160' y='20' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='168' y='4' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='168' y='20' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='176' y='4' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='176' y='20' fill='currentColor' style='font-size:1em'>c&lt;/text>
+&lt;text text-anchor='middle' x='184' y='4' fill='currentColor' style='font-size:1em'>m&lt;/text>
+&lt;text text-anchor='middle' x='184' y='20' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='192' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='192' y='20' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='200' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='200' y='20' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='208' y='20' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='216' y='4' fill='currentColor' style='font-size:1em'>S&lt;/text>
+&lt;text text-anchor='middle' x='224' y='4' fill='currentColor' style='font-size:1em'>ü&lt;/text>
+&lt;text text-anchor='middle' x='224' y='20' fill='currentColor' style='font-size:1em'>A&lt;/text>
+&lt;text text-anchor='middle' x='232' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='232' y='20' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='240' y='4' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='240' y='20' fill='currentColor' style='font-size:1em'>z&lt;/text>
+&lt;text text-anchor='middle' x='248' y='4' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='248' y='20' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='256' y='4' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='256' y='20' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='264' y='4' fill='currentColor' style='font-size:1em'>)&lt;/text>
+&lt;text text-anchor='middle' x='264' y='20' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='272' y='20' fill='currentColor' style='font-size:1em'>m&lt;/text>
+&lt;text text-anchor='middle' x='280' y='20' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='288' y='20' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='296' y='20' fill='currentColor' style='font-size:1em'>’&lt;/text>
+&lt;text text-anchor='middle' x='304' y='20' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='312' y='20' fill='currentColor' style='font-size:1em'>)&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Find Relevant Nodes&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>If the query is: &lt;em>&amp;ldquo;Which Stanford professor studies Alzheimer&amp;rsquo;s?&amp;rdquo;&lt;/em>&lt;/li>
+&lt;li>The query &lt;strong>matches&lt;/strong> &lt;code>{Stanford, Alzheimer’s}&lt;/code> in the graph.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Run Personalized PageRank (PPR)&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Give high starting scores to query nodes&lt;/strong> (&lt;code>Stanford&lt;/code> and &lt;code>Alzheimer’s&lt;/code>).&lt;/li>
+&lt;li>&lt;strong>Spread scores to connected nodes&lt;/strong> (e.g., &lt;code>Thomas Südhof&lt;/code> gets a high score).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Rank Passages by PageRank Score&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Passages mentioning &lt;code>Thomas Südhof&lt;/code> get &lt;strong>top rank&lt;/strong>.&lt;/li>
+&lt;li>Less relevant passages rank &lt;strong>lower&lt;/strong>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="https://shrsv.github.io/p/about-hipporag/image.png"
+width="1143"
+height="377"
+srcset="https://shrsv.github.io/p/about-hipporag/image_hu_ac67359686b4da5f.png 480w, https://shrsv.github.io/p/about-hipporag/image_hu_4abe0d9cb4edbeb4.png 1024w"
+loading="lazy"
+alt="alt text"
+class="gallery-image"
+data-flex-grow="303"
+data-flex-basis="727px"
+>&lt;/p>
+&lt;h3 id="why-this-works">&lt;strong>Why This Works&lt;/strong>
+&lt;/h3>&lt;ul>
+&lt;li>&lt;strong>Finds indirect connections&lt;/strong> (multi-hop retrieval).&lt;/li>
+&lt;li>&lt;strong>Ranks based on real-world relevance&lt;/strong> rather than keyword matching.&lt;/li>
+&lt;li>&lt;strong>Fast, since it&amp;rsquo;s done in one step.&lt;/strong>&lt;/li>
+&lt;/ul></description></item><item><title>Rosenblatt's Perceptron (WIP)</title><link>https://shrsv.github.io/p/rosenblatts-perceptron-wip/</link><pubDate>Sun, 09 Mar 2025 23:41:21 +0530</pubDate><guid>https://shrsv.github.io/p/rosenblatts-perceptron-wip/</guid><description>&lt;p>In &lt;strong>Smithsonian National Museum of American History&lt;/strong> - the following device
+is visible:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/1.jpg"
+width="600"
+height="473"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/1_hu_1c6d17b0c660cde6.jpg 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/1_hu_57728828e9e4b4f3.jpg 1024w"
+loading="lazy"
+alt="rosenblatt perceptron in museum"
+class="gallery-image"
+data-flex-grow="126"
+data-flex-basis="304px"
+>&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/2.jpg"
+width="600"
+height="472"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/2_hu_e551eb67e49ece3.jpg 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/2_hu_9299fc94f7bdeb09.jpg 1024w"
+loading="lazy"
+alt="S (Stimuli), A (Association), R (Response)"
+class="gallery-image"
+data-flex-grow="127"
+data-flex-basis="305px"
+>&lt;/p>
+&lt;p>&lt;a class="link" href="https://americanhistory.si.edu/collections/object/nmah_334414" target="_blank" rel="noopener"
+>(src)&lt;/a>&lt;/p>
+&lt;p>The device is called the &lt;strong>Mark I Perceptron&lt;/strong>.&lt;/p>
+&lt;p>It was built in 1957.&lt;/p>
+&lt;p>The chief person behind construction of this device was &lt;a class="link" href="https://en.wikipedia.org/wiki/Frank_Rosenblatt" target="_blank" rel="noopener"
+>Frank Rosenblatt&lt;/a>&lt;/p>
+&lt;p>The device had 3 parts:&lt;/p>
+&lt;ol>
+&lt;li>Stimuli receptor monitor (S)&lt;/li>
+&lt;li>Association machinery (A)&lt;/li>
+&lt;li>Response mechanism (S)&lt;/li>
+&lt;/ol>
+&lt;p>This is almost a mechanical equivalent of what Minsky sort of talks
+about in his &lt;a class="link" href="http://aurellem.org/society-of-mind/som-5.3.html" target="_blank" rel="noopener"
+>&lt;em>Society of Mind&lt;/em>&lt;/a>:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/3.png"
+width="332"
+height="210"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/3_hu_4cc180999959f97.png 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/3_hu_bdc6114d334dcfc1.png 1024w"
+loading="lazy"
+alt="Minsky’s Description"
+class="gallery-image"
+data-flex-grow="158"
+data-flex-basis="379px"
+>&lt;/p>
+&lt;blockquote>
+&lt;p>This diagram depicts our sensory machinery as sending information to the brain, wherein it is projected on some inner mental movie screen. Then, inside that ghostly theater, a lurking Self observes the scene and then considers what to do. Finally, that Self may act — somehow reversing all those steps — to influence the real world by sending various signals back through yet another family of remote-control accessories.
+&amp;ndash; Marvin Minsky, The Society of Mind&lt;/p>&lt;/blockquote>
+&lt;p>And this is Rosenbaltt tweaking the perceptron:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/4.jpg"
+width="497"
+height="617"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/4_hu_c2e0ce1842f5f865.jpg 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/4_hu_94959b77a8a153f0.jpg 1024w"
+loading="lazy"
+alt="Rosenbaltt Working with Perceptron"
+class="gallery-image"
+data-flex-grow="80"
+data-flex-basis="193px"
+>&lt;/p>
+&lt;p>You can see the &lt;a class="link" href="https://www.nytimes.com/1958/07/08/archives/new-navy-device-learns-by-doing-psychologist-shows-embryo-of.html" target="_blank" rel="noopener"
+>NYT&lt;/a> reporting that the navy claimed the device
+would eventually:&lt;/p>
+&lt;blockquote>
+&lt;p>the embryo of an electronic computer today that it expects will be able to walk, talk, see, write, reproduce itself and be conscious of its existence.&lt;/p>&lt;/blockquote>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/6.png"
+width="402"
+height="552"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/6_hu_642ef1adb74d61e0.png 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/6_hu_fba8ef22cbae61f6.png 1024w"
+loading="lazy"
+alt="The Prediction"
+class="gallery-image"
+data-flex-grow="72"
+data-flex-basis="174px"
+>&lt;/p>
+&lt;p>All these things aside, we will try to cull some ideas from Rosenblatt&amp;rsquo;s original paper - accessible at &lt;a class="link" href="https://www.ling.upenn.edu/courses/cogs501/Rosenblatt1958.pdf" target="_blank" rel="noopener"
+>The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain&lt;/a>&lt;/p>
+&lt;h2 id="memory-is-the-foundation-for-higher-level-capabilities-but-what-is-it">Memory is the foundation for higher-level capabilities (but What is it?!)
+&lt;/h2>&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/memory.png"
+width="450"
+height="195"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/memory_hu_dfbdf1760e77712e.png 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/memory_hu_6fb59de241cac732.png 1024w"
+loading="lazy"
+alt="The role of memory"
+class="gallery-image"
+data-flex-grow="230"
+data-flex-basis="553px"
+>&lt;/p>
+&lt;h2 id="the-3-questions-and-rs-area-of-focus">The 3 Questions (And R&amp;rsquo;s Area of Focus)
+&lt;/h2>&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/focus.png"
+width="477"
+height="255"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/focus_hu_88f61c06e73b39ac.png 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/focus_hu_d717b9b427741867.png 1024w"
+loading="lazy"
+alt="Focus Area"
+class="gallery-image"
+data-flex-grow="187"
+data-flex-basis="448px"
+>&lt;/p>
+&lt;h2 id="how-is-stimulus-represented-in-storage">How is Stimulus represented in Storage?
+&lt;/h2>&lt;p>R considers options on how storage may work - based on existing scholarship. The interesting scholarly decision happens right here - he picks the right architecture, the right bet so to speak.&lt;/p>
+&lt;h3 id="the-critical-insight-r-makes-a-bet-on-the-nature-of-memory">The Critical Insight: R Makes a Bet On the Nature of Memory
+&lt;/h3>&lt;p>Position A: Coded Representational Memory (Essentially - expecting an isolated storage of memory)&lt;/p>
+&lt;blockquote>
+&lt;p>The first suggests that storage of sensory information is in the form of coded representations or images, with some sort of one-to-one mapping between the sensory stimulus and the stored pattern. According to this hypothesis, if one understood the code or &amp;lsquo;wiring diagram&amp;rsquo; of the nervous system, one should, in principle, be able to discover exactly what an organism remembers by reconstructing the original sensory patterns from the &amp;lsquo;memory traces&amp;rsquo; which they have left, much as we might develop a photographic negative, or translate the pattern of electrical charges in the &amp;lsquo;memory&amp;rsquo; of a digital computer.&lt;/p>&lt;/blockquote>
+&lt;p>Position B: Connectionist Memory&lt;/p>
+&lt;blockquote>
+&lt;p>The alternative approach, which stems from the tradition of British empiricism, hazards the guess that the images of stimuli may never really be recorded at all, and that the central nervous system simply acts as an intricate switching network, where retention takes the form of new connections, or pathways, between centers of activity. In many of the more recent developments of this position (Hebb&amp;rsquo;s &amp;lsquo;cell assembly,&amp;rsquo; and Hull&amp;rsquo;s &amp;lsquo;cortical anticipatory goal response,&amp;rsquo; for example) the &amp;lsquo;responses&amp;rsquo; which are associated to stimuli may be entirely contained within the CNS itself. In this case, the response represents an &amp;lsquo;idea&amp;rsquo; rather than an action.&lt;/p>&lt;/blockquote>
+&lt;p>Essentially - the difference in position is about direct recording vs indirect &amp;ldquo;impressions&amp;rdquo;.&lt;/p>
+&lt;h3 id="rosenblatts-rationale-for-selecting-a-connectionist-model-over-coded-representation">Rosenblatt&amp;rsquo;s Rationale for Selecting a Connectionist Model (over Coded Representation)
+&lt;/h3>&lt;ul>
+&lt;li>&lt;strong>Biology:&lt;/strong> Coded representation is &lt;em>precise&lt;/em>, &lt;em>definite&lt;/em>, and &lt;strong>rigid&lt;/strong> &amp;ndash; almost machine-like. Rosenblatt appreciated that different organisms remember things differently - learning from the same source! These individual variations in storage encouraged him to reject coded representation&lt;/li>
+&lt;li>&lt;strong>Simplicity:&lt;/strong> Of the options available, the connectionist model is simpler and economical. So he favored such a model.&lt;/li>
+&lt;li>&lt;strong>Probabilistic Pattern Matching:&lt;/strong> Rosenblatt noticed that humans and other creatures can match and work with images in diferent configurations, lighting, etc. That means - we are able to generalize the detection of objects upto an extent, classify them, and so on. He expected a more flexible model, rather than a rigid model to be able to perform this sort of work.&lt;/li>
+&lt;li>&lt;strong>Recall is natural and direct in connectionist model:&lt;/strong> In the coded method - learning or retrieving information requires a special lookup process. In connectionist model, learning is merely response pathway, given a stimulus. A simpler model to get the same function.&lt;/li>
+&lt;li>&lt;strong>Stronger Mathematical Basis:&lt;/strong> R embraced probabilistic models over deterministic ones from earlier (such as McCulloh-Pitts). He demonstrates how a random configuration of connections is able to achieve recognition (or learning).&lt;/li>
+&lt;li>&lt;strong>Less Idealized, More biological model:&lt;/strong> He critiques earlier models - from McCulloh and Minsky - calling them too structured or algorithmic, whereas biological learning is &lt;strong>stochastic&lt;/strong>. Connectionism better aligns with real-world learning.&lt;/li>
+&lt;/ul>
+&lt;p>In short - R betted on &lt;strong>adaptive learning&lt;/strong> over &lt;strong>rigid storage&lt;/strong>.&lt;/p>
+&lt;p>&lt;em>R shows that learning and memory are not different things - the connectionist model as a simpler model - collapses storage and learning into one!&lt;/em>&lt;/p></description></item></channel></rss>

@@ -1,0 +1,1012 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Micro on The Learning Loom</title><link>https://shrsv.github.io/categories/micro/</link><description>Recent content in Micro on The Learning Loom</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 10 Apr 2025 20:41:21 +0530</lastBuildDate><atom:link href="https://shrsv.github.io/categories/micro/index.xml" rel="self" type="application/rss+xml"/><item><title>Market Capitalization</title><link>https://shrsv.github.io/p/market-capitalization/</link><pubDate>Thu, 10 Apr 2025 20:41:21 +0530</pubDate><guid>https://shrsv.github.io/p/market-capitalization/</guid><description>&lt;p>I was browsing some Bitbucket API documentation somewhere
+when I read something like - &lt;em>Atlassian IPO&amp;rsquo;d with a market
+capitalization of 4.37 Billion&lt;/em>&lt;/p>
+&lt;p>I wanted to make sense of that sentence a bit more than I
+already did.&lt;/p>
+&lt;p>Obvious - but worth stating for the record: Atlassian builds
+Bitbucket.&lt;/p>
+&lt;p>Atlassian was publicly listed on NASDAQ on December 10, 2015.&lt;/p>
+&lt;p>The symbol for the company was the memorable word - &lt;em>TEAM&lt;/em>&lt;/p>
+&lt;p>And just in case you wish to know - NASDAQ stands for:&lt;/p>
+&lt;blockquote>
+&lt;p>National Association of Securities Dealers Automated Quotations&lt;/p>&lt;/blockquote>
+&lt;p>That was a serious &lt;em>WTF&lt;/em> moment for me.&lt;/p>
+&lt;p>Anyway - turns out I don&amp;rsquo;t know anything about:&lt;/p>
+&lt;ul>
+&lt;li>Atlassian&lt;/li>
+&lt;li>NASDAQ&lt;/li>
+&lt;li>Or market&lt;/li>
+&lt;li>Or capitalization&lt;/li>
+&lt;/ul>
+&lt;p>But I do know one thing: 4,370,000,000 &amp;ndash; That&amp;rsquo;s a &lt;strong>huge&lt;/strong> number&lt;/p>
+&lt;p>Here&amp;rsquo;s a visualization I drew for myself:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/market-capitalization/viz.png"
+width="483"
+height="600"
+srcset="https://shrsv.github.io/p/market-capitalization/viz_hu_ab43e8aed908ad7c.png 480w, https://shrsv.github.io/p/market-capitalization/viz_hu_224215de6da85064.png 1024w"
+loading="lazy"
+alt="The number"
+class="gallery-image"
+data-flex-grow="80"
+data-flex-basis="193px"
+>&lt;/p>
+&lt;p>Then I googled for TEAM, and found its stock market history.&lt;/p>
+&lt;p>I went to the very beginning, Day 1. And saw this:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/market-capitalization/day1.png"
+width="875"
+height="538"
+srcset="https://shrsv.github.io/p/market-capitalization/day1_hu_c052af1489cc2f8d.png 480w, https://shrsv.github.io/p/market-capitalization/day1_hu_3afb0fa364a0e902.png 1024w"
+loading="lazy"
+alt="Day 1"
+class="gallery-image"
+data-flex-grow="162"
+data-flex-basis="390px"
+>&lt;/p>
+&lt;p>So I figure &lt;code>28 * 17M&lt;/code> should give the market capitalization - but then no. That&amp;rsquo;s an order of magnitude lesser than expected.&lt;/p>
+&lt;p>Turns out - that is merely the &lt;em>trading volume&lt;/em> for the day; that is N number of shares were outstanding - up for the grabs - and only a percentage of that ended up getting traded:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/market-capitalization/tv.png"
+width="1050"
+height="196"
+srcset="https://shrsv.github.io/p/market-capitalization/tv_hu_31a77f72a8e5d12c.png 480w, https://shrsv.github.io/p/market-capitalization/tv_hu_6b4e119ec2d8ef2.png 1024w"
+loading="lazy"
+alt="Trading Volume"
+class="gallery-image"
+data-flex-grow="535"
+data-flex-basis="1285px"
+>&lt;/p>
+&lt;p>Tried trawling for data elsewhere, different sites, different places, stil not getting the numbers I need.&lt;/p>
+&lt;p>Finally - in the NASDAQ site saw some relevant data:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/market-capitalization/nd.png"
+width="731"
+height="799"
+srcset="https://shrsv.github.io/p/market-capitalization/nd_hu_2a3f5cab28bbe367.png 480w, https://shrsv.github.io/p/market-capitalization/nd_hu_2259c9b83bbdcfb8.png 1024w"
+loading="lazy"
+alt="NASDAQ details"
+class="gallery-image"
+data-flex-grow="91"
+data-flex-basis="219px"
+>&lt;/p>
+&lt;p>&lt;a class="link" href="https://www.nasdaq.com/market-activity/ipos/overview?dealId=979107-79756" target="_blank" rel="noopener"
+>src&lt;/a>&lt;/p>
+&lt;p>Tried pluggin and chugging a few numbers - no luck.&lt;/p>
+&lt;p>Finally I went to the source at &lt;a class="link" href="https://www.sec.gov/Archives/edgar/data/1650372/000104746915009143/a2226831z424b4.htm" target="_blank" rel="noopener"
+>SEC filing&lt;/a> and found the following:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/market-capitalization/sec.png"
+width="1133"
+height="443"
+srcset="https://shrsv.github.io/p/market-capitalization/sec_hu_53e1d04b3b7a59fc.png 480w, https://shrsv.github.io/p/market-capitalization/sec_hu_72999692ca015a2f.png 1024w"
+loading="lazy"
+alt="SEC Listing"
+class="gallery-image"
+data-flex-grow="255"
+data-flex-basis="613px"
+>&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 312 25"
+>
+&lt;g transform='translate(8,16)'>
+&lt;text text-anchor='middle' x='0' y='4' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='8' y='4' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='16' y='4' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='24' y='4' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='32' y='4' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='40' y='4' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='48' y='4' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='56' y='4' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='64' y='4' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='72' y='4' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='88' y='4' fill='currentColor' style='font-size:1em'>+&lt;/text>
+&lt;text text-anchor='middle' x='104' y='4' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='112' y='4' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='120' y='4' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='128' y='4' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='136' y='4' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='144' y='4' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='152' y='4' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='160' y='4' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='168' y='4' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='176' y='4' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='184' y='4' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='200' y='4' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='216' y='4' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='224' y='4' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='232' y='4' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='240' y='4' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='248' y='4' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='256' y='4' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='264' y='4' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='272' y='4' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='280' y='4' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='288' y='4' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='296' y='4' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;p>So that&amp;rsquo;s the number of shares available - making up of &lt;em>Class A&lt;/em> and &lt;em>Class B&lt;/em> shares.&lt;/p>
+&lt;p>I didn&amp;rsquo;t go into much details on this differrentiation - but there&amp;rsquo;s voting differences, etc - which is beside the point now. Many of the data trawling sites seem to get this wrong.&lt;/p>
+&lt;p>Anyway - now that I know the necessary details, I could calculate market capitalization:&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 712 57"
+>
+&lt;g transform='translate(8,16)'>
+&lt;circle cx='288' cy='32' r='6' stroke='currentColor' fill='currentColor'>&lt;/circle>
+&lt;text text-anchor='middle' x='0' y='4' fill='currentColor' style='font-size:1em'>m&lt;/text>
+&lt;text text-anchor='middle' x='0' y='36' fill='currentColor' style='font-size:1em'>m&lt;/text>
+&lt;text text-anchor='middle' x='8' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='8' y='36' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='16' y='4' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='16' y='36' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='24' y='4' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='24' y='36' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='32' y='4' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='32' y='36' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='40' y='4' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='40' y='36' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='56' y='4' fill='currentColor' style='font-size:1em'>c&lt;/text>
+&lt;text text-anchor='middle' x='56' y='36' fill='currentColor' style='font-size:1em'>c&lt;/text>
+&lt;text text-anchor='middle' x='64' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='64' y='36' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='72' y='4' fill='currentColor' style='font-size:1em'>p&lt;/text>
+&lt;text text-anchor='middle' x='72' y='36' fill='currentColor' style='font-size:1em'>p&lt;/text>
+&lt;text text-anchor='middle' x='80' y='4' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='80' y='36' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='88' y='4' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='88' y='36' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='96' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='96' y='36' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='104' y='4' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='104' y='36' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='112' y='4' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='112' y='36' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='120' y='4' fill='currentColor' style='font-size:1em'>z&lt;/text>
+&lt;text text-anchor='middle' x='120' y='36' fill='currentColor' style='font-size:1em'>z&lt;/text>
+&lt;text text-anchor='middle' x='128' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='128' y='36' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='136' y='4' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='136' y='36' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='144' y='4' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='144' y='36' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='152' y='4' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='152' y='36' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='160' y='4' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='160' y='36' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='176' y='4' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='176' y='36' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='192' y='4' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='192' y='36' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='200' y='4' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='200' y='36' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='208' y='4' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='208' y='36' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='216' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='216' y='36' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='224' y='4' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='224' y='36' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='232' y='36' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='240' y='4' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='240' y='36' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='248' y='4' fill='currentColor' style='font-size:1em'>u&lt;/text>
+&lt;text text-anchor='middle' x='248' y='36' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='256' y='4' fill='currentColor' style='font-size:1em'>m&lt;/text>
+&lt;text text-anchor='middle' x='256' y='36' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='264' y='4' fill='currentColor' style='font-size:1em'>b&lt;/text>
+&lt;text text-anchor='middle' x='264' y='36' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='272' y='4' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='272' y='36' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='280' y='4' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='296' y='4' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='304' y='4' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='304' y='36' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='312' y='36' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='320' y='4' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='328' y='4' fill='currentColor' style='font-size:1em'>u&lt;/text>
+&lt;text text-anchor='middle' x='328' y='36' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='336' y='4' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='344' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='344' y='36' fill='currentColor' style='font-size:1em'>5&lt;/text>
+&lt;text text-anchor='middle' x='352' y='4' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='352' y='36' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='360' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='360' y='36' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='368' y='4' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='368' y='36' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='376' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='376' y='36' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='384' y='4' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='384' y='36' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='392' y='4' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='392' y='36' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='400' y='4' fill='currentColor' style='font-size:1em'>g&lt;/text>
+&lt;text text-anchor='middle' x='400' y='36' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='408' y='36' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='416' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='416' y='36' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='424' y='4' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='424' y='36' fill='currentColor' style='font-size:1em'>6&lt;/text>
+&lt;text text-anchor='middle' x='432' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='432' y='36' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='440' y='4' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='440' y='36' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='448' y='4' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='456' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='472' y='4' fill='currentColor' style='font-size:1em'>x&lt;/text>
+&lt;text text-anchor='middle' x='488' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='496' y='4' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='504' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='512' y='4' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='520' y='4' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='536' y='4' fill='currentColor' style='font-size:1em'>p&lt;/text>
+&lt;text text-anchor='middle' x='544' y='4' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='552' y='4' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='560' y='4' fill='currentColor' style='font-size:1em'>c&lt;/text>
+&lt;text text-anchor='middle' x='568' y='4' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='584' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='592' y='4' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='608' y='4' fill='currentColor' style='font-size:1em'>c&lt;/text>
+&lt;text text-anchor='middle' x='616' y='4' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='624' y='4' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='632' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='640' y='4' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='656' y='4' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='664' y='4' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='680' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='688' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='696' y='4' fill='currentColor' style='font-size:1em'>y&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;p>Now - that&amp;rsquo;s 5.8 Billion. And that matches the news:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/market-capitalization/mv.png"
+width="1019"
+height="343"
+srcset="https://shrsv.github.io/p/market-capitalization/mv_hu_7684ad2c7baa2173.png 480w, https://shrsv.github.io/p/market-capitalization/mv_hu_d15e2c33d2e5b624.png 1024w"
+loading="lazy"
+alt="The Market Value"
+class="gallery-image"
+data-flex-grow="297"
+data-flex-basis="713px"
+>&lt;/p></description></item><item><title>Betting > Believing</title><link>https://shrsv.github.io/p/betting-gt-believing/</link><pubDate>Wed, 26 Mar 2025 20:41:21 +0530</pubDate><guid>https://shrsv.github.io/p/betting-gt-believing/</guid><description>&lt;h2 id="the-power-of-betting-in-decision-making">The Power of Betting in Decision-Making
+&lt;/h2>&lt;h3 id="navigating-uncertainty">Navigating Uncertainty
+&lt;/h3>&lt;p>In real-world decision-making, uncertainty is a constant. Whether it’s a project deadline, a hiring choice, or a career move, information is often incomplete or unclear. Waiting for perfect clarity isn’t always an option—time runs out, resources dwindle, and complexity can overwhelm.&lt;/p>
+&lt;p>Many rely on &lt;em>believing&lt;/em>—trusting intuition, assumptions, or the opinions of others—to guide them. While this approach can provide an initial sense of direction, it falls short when the stakes are high or the context is unique. A more effective strategy is &lt;em>betting&lt;/em>: making calculated decisions based on evidence and outcomes.&lt;/p>
+&lt;h3 id="a-lesson-in-misjudgment">A Lesson in Misjudgment
+&lt;/h3>&lt;p>Once, I was deep into a project with a looming deadline. I did some quick mental math and convinced myself, “It’s tight, but we’ve got this.” Riding a wave of optimism, I skimmed progress updates and reassured myself that things were on track.&lt;/p>
+&lt;p>Then the deadline arrived—and the project was nowhere near completion. The issue wasn’t my team’s performance; it was my own failure to verify assumptions against reality. I had &lt;em>believed&lt;/em> instead of &lt;em>inspected&lt;/em>, and it cost us dearly.&lt;/p>
+&lt;h3 id="why-believing-falls-short">Why Believing Falls Short
+&lt;/h3>&lt;p>Believing feels natural. It’s tempting to trust gut feelings, conventional wisdom, or someone else’s word. However, this method has critical weaknesses:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Untested Assumptions:&lt;/strong> Unverified beliefs create blind spots.&lt;/li>
+&lt;li>&lt;strong>High Stakes:&lt;/strong> Relying on trust alone can magnify risks in crucial moments.&lt;/li>
+&lt;li>&lt;strong>Unique Contexts:&lt;/strong> Standard solutions often don’t fit specific challenges.&lt;/li>
+&lt;/ul>
+&lt;p>Examples highlight these pitfalls:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Hiring:&lt;/strong> A candidate’s resume may shine, but without a test project, a poor fit can slip through.&lt;/li>
+&lt;li>&lt;strong>Projects:&lt;/strong> Optimistic projections can obscure real progress if milestones aren’t tracked.&lt;/li>
+&lt;li>&lt;strong>Career Moves:&lt;/strong> A role might seem perfect, but the reality can be vastly different.&lt;/li>
+&lt;/ul>
+&lt;p>Believing can offer direction, but it falters under scrutiny. A more concrete approach is needed.&lt;/p>
+&lt;h3 id="how-betting-takes-the-lead">How Betting Takes the Lead
+&lt;/h3>&lt;p>Betting isn’t about reckless gambles; it’s about measured risks and tangible outcomes. It acknowledges uncertainty and transforms it into an advantage. Here’s why it works:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Commitment Sharpens Focus:&lt;/strong> Investing resources—time, effort, or money—forces clarity.&lt;/li>
+&lt;li>&lt;strong>Results Teach:&lt;/strong> Every bet provides feedback, refining future decisions.&lt;/li>
+&lt;li>&lt;strong>Action Trumps Hesitation:&lt;/strong> Betting prevents paralysis and promotes forward movement.&lt;/li>
+&lt;li>&lt;strong>Reality Rules:&lt;/strong> Measurable outcomes ground decisions in fact, cutting through bias.&lt;/li>
+&lt;/ul>
+&lt;p>Practical applications demonstrate its effectiveness:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Hiring:&lt;/strong> Assign a trial project. Success justifies hiring; failure limits risk.&lt;/li>
+&lt;li>&lt;strong>Projects:&lt;/strong> Set a milestone—like a prototype in two weeks. Hit it and proceed; miss it and reassess.&lt;/li>
+&lt;li>&lt;strong>Career Moves:&lt;/strong> Test a new role through a short contract. If it fits, commit; if not, pivot with minimal loss.&lt;/li>
+&lt;/ul>
+&lt;p>Betting converts vague hopes into structured experiments, yielding clarity through action.&lt;/p>
+&lt;h3 id="a-historical-perspective-pascals-wager">A Historical Perspective: Pascal’s Wager
+&lt;/h3>&lt;p>This mindset isn’t new. The 17th-century philosopher Blaise Pascal framed belief in God as a bet:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Believe, and God exists:&lt;/strong> Immense reward.&lt;/li>
+&lt;li>&lt;strong>Believe, and God doesn’t:&lt;/strong> Minor loss.&lt;/li>
+&lt;li>&lt;strong>Don’t believe, and God exists:&lt;/strong> Major loss.&lt;/li>
+&lt;li>&lt;strong>Don’t believe, and God doesn’t:&lt;/strong> Small gain.&lt;/li>
+&lt;/ul>
+&lt;p>Pascal argued that betting on belief made sense—the potential upside outweighed the downside. This logic extends beyond faith: weigh potential gains and losses, then act decisively under uncertainty.&lt;/p>
+&lt;h3 id="using-bets-to-overcome-deadlocks">Using Bets to Overcome Deadlocks
+&lt;/h3>&lt;p>Decisions rarely come with full certainty, yet action is unavoidable. Believing may inspire ideas, but it fails when precision matters. Betting—acting with intent, measuring results, and adapting—handles uncertainty far better. It’s a tool for progress, turning ambiguity into opportunity.&lt;/p>
+&lt;p>When teams or leaders face decision paralysis, betting can break the deadlock. It’s not about reckless risk-taking; it’s about structured progress:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>For Leaders:&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Demonstrates confidence by committing to a direction.&lt;/li>
+&lt;li>Cuts through hesitation with thoughtful choices.&lt;/li>
+&lt;li>Example: Setting a bold goal to align and energize a team.&lt;/li>
+&lt;li>Encourages responsibility and decisiveness.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>For Teams:&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Moves from debate to action.&lt;/li>
+&lt;li>Provides clear targets and accountability.&lt;/li>
+&lt;li>Fosters learning—even from failure.&lt;/li>
+&lt;li>Keeps momentum going.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>In Uncertainty:&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Selects a single option when too many exist.&lt;/li>
+&lt;li>Tests small ideas before full commitment.&lt;/li>
+&lt;li>Turns confusion into growth opportunities.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>Betting isn’t about perfection—it’s about progress. It helps leaders make decisive choices, strengthens team cohesion, and prevents stagnation. The next time you’re stuck, try placing a bet: define a goal, commit to an action, and learn from the outcome.&lt;/p>
+&lt;p>It may just work better than endless debates about “beliefs.”&lt;/p></description></item><item><title>I Disagree With Jeff Bezos</title><link>https://shrsv.github.io/p/i-disagree-with-jeff-bezos/</link><pubDate>Sat, 22 Mar 2025 20:41:21 +0530</pubDate><guid>https://shrsv.github.io/p/i-disagree-with-jeff-bezos/</guid><description>&lt;p>It’s not every day that I find myself at odds with someone like Jeff Bezos (on a matter of principle, of course).&lt;/p>
+&lt;p>The man who built Amazon into a global phenomenon once said, &lt;strong>“Good intentions don’t work. Mechanisms do.”&lt;/strong>&lt;/p>
+&lt;p>At first glance, it’s a compelling statement—practical, grounded, and appealing to the results-driven crowd
+in business and economic worlds.&lt;/p>
+&lt;p>But the more I reflect on it, the more I disagree.&lt;/p>
+&lt;p>I will argue here that intentions, far from being irrelevant, are foundational to improving
+the quality of human existence.&lt;/p>
+&lt;p>My reasons - in short - are as follows:&lt;/p>
+&lt;ul>
+&lt;li>Intent is about us - humans; effect is about the world at large.&lt;/li>
+&lt;li>Intent is spiritual or psychological in nature; effect is economic or physical in nature (usually).&lt;/li>
+&lt;li>Intent is often a relatively long-term phenomenon; mechanism is usually more short-term.&lt;/li>
+&lt;/ul>
+&lt;h2 id="a-bit-of-history">A bit of history&amp;hellip;
+&lt;/h2>&lt;p>Look at the sages, prophets, and spiritual traditions that have guided humanity for millennia.&lt;/p>
+&lt;p>From Buddhist monks to the wise teachers of ancient India, they’ve all emphasized one thing: &lt;em>get your intent right&lt;/em>.&lt;/p>
+&lt;p>Why?&lt;/p>
+&lt;p>Because intent is tightly coupled to the quality of your consciousness - which,
+in the long run, determines actions that lead to the individual and the world&amp;rsquo;s
+future.&lt;/p>
+&lt;p>Contrast this with the economic perspective, where intentions are dismissed as fluff.&lt;/p>
+&lt;p>Economists and business people often argue that what matters are effects—tangible results, second-order consequences, and measurable outputs.&lt;/p>
+&lt;p>And mechanisms, they say, are what drive success.&lt;/p>
+&lt;p>But I think this view misses something fundamental.&lt;/p>
+&lt;h2 id="putting-the-idea-through-the-common-sense-filter">Putting the idea through the &amp;ldquo;common sense&amp;rdquo; filter
+&lt;/h2>&lt;p>Let’s test this idea with a simple scenario.&lt;/p>
+&lt;p>Imagine you’re facing a brain tumor, and you need a neurosurgeon.&lt;/p>
+&lt;p>You have two options: one is a brilliant technician with a criminal background, whose intentions you distrust; the other is less technical but genuinely committed to your well-being.&lt;/p>
+&lt;p>Who do you choose?&lt;/p>
+&lt;p>Most of us, I suspect, would pick the latter.&lt;/p>
+&lt;p>Why?&lt;/p>
+&lt;p>Because we instinctively know - intent matters.&lt;/p>
+&lt;p>We instinctively sense that someone who doesn’t have our best interests at heart—no matter how skilled—can’t be trusted with something as precious as our life.&lt;/p>
+&lt;p>Mechanisms alone don’t cut it when the stakes are personal.&lt;/p>
+&lt;h2 id="time-horizon">Time Horizon
+&lt;/h2>&lt;p>Now, let’s widen the lens.&lt;/p>
+&lt;p>Consider the longest-standing organizations in history: churches, temples, spiritual lineages, educational institutions, and service-oriented groups.&lt;/p>
+&lt;p>These entities have endured for decades, centuries, even millennia—often thriving regardless of economic conditions.&lt;/p>
+&lt;p>Take the Shankaracharya tradition in India, a lineage of wisdom that has persisted for over a thousand years.&lt;/p>
+&lt;p>It’s not built on economic principles, which are inherently dynamic and unstable, but on an unchanging commitment to truth and human upliftment.&lt;/p>
+&lt;p>What do these organizations have in common?&lt;/p>
+&lt;p>They operate on what I call the “Intent Principle” rather than the “Effect Principle.”&lt;/p>
+&lt;p>Their focus isn’t solely on short-term outputs or market fluctuations; it’s on a deeper, enduring purpose.&lt;/p>
+&lt;p>And that purpose—rooted in goodwill and noble intent—carries them through storms that topple profit-driven systems.&lt;/p>
+&lt;h2 id="maybe-intent-in-itself-can-be-seen-as-part-of-larger-mechanism">Maybe Intent In Itself Can Be Seen As Part of Larger Mechanism
+&lt;/h2>&lt;p>Of course, I’m not saying mechanisms don’t matter.&lt;/p>
+&lt;p>A well-designed system can amplify the impact of good intentions.&lt;/p>
+&lt;p>But intent isn’t separate from the mechanism—it’s part of it, especially in human organizations.&lt;/p>
+&lt;p>When we sense that someone doesn’t wish us well or lacks consideration, we pull away.&lt;/p>
+&lt;p>That’s the genesis of disorder, distrust, and collapse.&lt;/p>
+&lt;p>Conversely, when intent is genuine and inspiring, it binds people together, fueling cooperation and resilience.&lt;/p>
+&lt;p>Intent is the foundation; mechanisms are the structure built upon it.&lt;/p>
+&lt;h2 id="the-durability-of-intent">The Durability of Intent
+&lt;/h2>&lt;p>Economic systems, by their nature, are concrete but fleeting.&lt;/p>
+&lt;p>They rise and fall with markets, technologies, and trends.&lt;/p>
+&lt;p>Intent, on the other hand, is abstract yet enduring.&lt;/p>
+&lt;p>A noble thought—a commitment to benefit others, to serve a country, or to enhance well-being—can survive generations.&lt;/p>
+&lt;p>It’s not easily destroyed, even under adverse circumstances.&lt;/p>
+&lt;p>History shows this: the goodwill and aspirations of our ancestors continue to inspire us long after their physical creations have crumbled.&lt;/p>
+&lt;p>Think about it: no truly noble thought ever dies.&lt;/p>
+&lt;p>It plants seeds that bloom into future actions, often in ways we can’t predict.&lt;/p>
+&lt;p>Mechanisms, being rigid and material, eventually break down.&lt;/p>
+&lt;p>Intent, being fluid and timeless, adapts and persists.&lt;/p>
+&lt;h2 id="a-life-built-on-intent">A Life Built on Intent
+&lt;/h2>&lt;p>So, where does this leave us?&lt;/p>
+&lt;p>I believe good intentions matter more than mechanisms—not because they’re a substitute for results, but because they’re the firm ground on which all lasting results rest.&lt;/p>
+&lt;p>A steadfast commitment to an inspiring intent is the best way to make the most of our lives, both for ourselves and for others.&lt;/p>
+&lt;p>It’s what drives us and our associates through decades, even lifetimes.&lt;/p>
+&lt;p>It’s what survives beyond us.&lt;/p>
+&lt;p>Jeff Bezos might disagree, and the economists might scoff.&lt;/p>
+&lt;p>But I’d rather take my cues from the sages who’ve stood the test of time.&lt;/p>
+&lt;p>Get your intent right, and the mechanisms will follow.&lt;/p>
+&lt;p>That’s the real power of intent.&lt;/p></description></item><item><title>Organizations That Last</title><link>https://shrsv.github.io/p/organizations-that-last/</link><pubDate>Fri, 21 Mar 2025 20:41:21 +0530</pubDate><guid>https://shrsv.github.io/p/organizations-that-last/</guid><description>&lt;p>&lt;img src="https://shrsv.github.io/p/organizations-that-last/image.png"
+width="568"
+height="378"
+srcset="https://shrsv.github.io/p/organizations-that-last/image_hu_cb285cdb4fad44ac.png 480w, https://shrsv.github.io/p/organizations-that-last/image_hu_6eec0f29caa4a812.png 1024w"
+loading="lazy"
+alt="The Kailasa Temple"
+class="gallery-image"
+data-flex-grow="150"
+data-flex-basis="360px"
+>&lt;/p>
+&lt;p>Some organizations stand the test of time, lasting &lt;strong>centuries or even millennia&lt;/strong>.&lt;/p>
+&lt;p>They don’t chase &lt;em>rapid growth&lt;/em>, which often leads to collapse.&lt;/p>
+&lt;p>Think of a company like &lt;strong>WeWork&lt;/strong>,&lt;br>
+that expanded too fast and fell apart due to &lt;em>mismanagement&lt;/em>.&lt;/p>
+&lt;p>In contrast, some of these enduring groups focus on &lt;strong>purpose&lt;/strong>, &lt;strong>stability&lt;/strong>, and &lt;strong>community&lt;/strong>.&lt;/p>
+&lt;p>For example, small family-owned businesses often endure because they prioritize &lt;em>legacy&lt;/em> over profit.&lt;/p>
+&lt;p>They grow slowly, staying rooted in their communities, and pass their work through generations.&lt;/p>
+&lt;p>Take &lt;strong>Kongo Gumi&lt;/strong> in Japan: founded in &lt;em>578 AD&lt;/em>, this construction firm built Buddhist temples for over &lt;strong>1,400 years&lt;/strong> across 40 generations before being absorbed in 2006.&lt;/p>
+&lt;p>Or consider &lt;strong>Antinori&lt;/strong>, an Italian wine producer since &lt;em>1385&lt;/em>, now in its 26th generation, thriving by blending tradition with modern techniques.&lt;/p>
+&lt;p>Then there are monasteries and convents, built on &lt;em>spiritual missions&lt;/em> that don’t bend to trends.&lt;/p>
+&lt;p>They’re often self-sufficient, growing their own food or making goods like wine, and their isolation keeps them steady.&lt;/p>
+&lt;p>The &lt;strong>Monastery of Saint Catherine&lt;/strong> in Egypt, founded in &lt;em>565 AD&lt;/em>, has survived invasions thanks to its remote spot at the foot of Mount Sinai.&lt;/p>
+&lt;p>Similarly, the &lt;strong>Abbey of Monte Cassino&lt;/strong> in Italy, started in &lt;em>529 AD&lt;/em> by Saint Benedict, has been rebuilt after destruction—like during WWII—because its &lt;em>purpose&lt;/em> endures.&lt;/p>
+&lt;p>Educational institutions also stand out for their longevity.&lt;/p>
+&lt;p>They meet a core human need: the pursuit of &lt;strong>knowledge&lt;/strong>.&lt;/p>
+&lt;p>With strong governance, endowments, and alumni support, they adapt while staying true to their mission.&lt;/p>
+&lt;p>The &lt;strong>University of Al-Qarawiyyin&lt;/strong> in Morocco, founded in &lt;em>859 AD&lt;/em>, is the world’s &lt;em>oldest university&lt;/em>, evolving from a madrasa into a modern institution.&lt;/p>
+&lt;p>In the UK, the &lt;strong>University of Oxford&lt;/strong> has been teaching since &lt;em>1096&lt;/em>, balancing tradition with academic excellence to remain a global leader.&lt;/p>
+&lt;p>Broader religious institutions, beyond monasteries, also last, tied to &lt;em>spiritual&lt;/em> and &lt;em>cultural roles&lt;/em>.&lt;/p>
+&lt;p>They often own assets like land and have global networks for support.&lt;/p>
+&lt;p>The &lt;strong>Catholic Church&lt;/strong>, established in the &lt;em>1st century AD&lt;/em>, has weathered wars and schisms with its centralized authority in the Vatican.&lt;/p>
+&lt;p>In India, the &lt;strong>Advaita Vedanta&lt;/strong> tradition, founded by &lt;em>Adi Shankaracharya&lt;/em> in the &lt;em>8th century AD&lt;/em>, continues to thrive.&lt;/p>
+&lt;p>Shankaracharya established four mathas (monastic centers) in &lt;strong>Sringeri&lt;/strong>, &lt;strong>Dwarka&lt;/strong>, &lt;strong>Puri&lt;/strong>, and &lt;strong>Joshimath&lt;/strong> to preserve his non-dualistic philosophy, and these institutions still guide spiritual seekers today, rooted in ancient texts and practices.&lt;/p>
+&lt;p>In Japan, the &lt;strong>Ise Grand Shrine&lt;/strong>, a Shinto site, has been rebuilt every 20 years for over &lt;strong>1,300 years&lt;/strong>, a ritual that keeps its spirit alive.&lt;/p>
+&lt;p>Guilds and trade associations offer another angle. They protect professions, set standards, and build community, adapting over time to stay relevant.&lt;/p>
+&lt;p>The &lt;strong>Worshipful Company of Goldsmiths&lt;/strong> in the UK, founded in &lt;em>1327&lt;/em>, still regulates the goldsmith trade today.&lt;/p>
+&lt;p>The &lt;strong>Hanseatic League&lt;/strong>, a network of merchant guilds from the 13th to 17th centuries in Europe, shaped trade practices that echo in modern organizations.&lt;/p>
+&lt;p>Charitable foundations endure by focusing on &lt;em>long-term missions&lt;/em>, backed by endowments and stable governance.&lt;/p>
+&lt;p>The &lt;strong>Rockefeller Foundation&lt;/strong>, started in &lt;em>1913&lt;/em>, has funded global health and education for over a century, tackling issues like climate change.&lt;/p>
+&lt;p>The &lt;strong>Wellcome Trust&lt;/strong> in the UK, since &lt;em>1936&lt;/em>, uses its £30 billion endowment to support medical research, including the &lt;strong>Human Genome Project&lt;/strong>.&lt;/p>
+&lt;p>Finally, indigenous and tribal organizations show remarkable resilience, rooted in &lt;em>culture&lt;/em> and &lt;em>land&lt;/em>.&lt;/p>
+&lt;p>The &lt;strong>Iroquois Confederacy&lt;/strong> in North America, formed around &lt;em>1142 AD&lt;/em>, unites six nations and still operates today, its governance even influencing the U.S. Constitution.&lt;/p>
+&lt;p>The &lt;strong>San People&lt;/strong> of Southern Africa have maintained their communal structures for &lt;strong>thousands of years&lt;/strong>, passing traditions through oral storytelling.&lt;/p>
+&lt;p>What ties these organizations together? A &lt;strong>clear mission&lt;/strong>, &lt;strong>strong community ties&lt;/strong>, and a focus on &lt;em>sustainability&lt;/em> over reckless growth.&lt;/p>
+&lt;p>They prove that lasting impact comes from &lt;strong>purpose&lt;/strong> and &lt;strong>patience&lt;/strong>, not chasing scale at all costs.&lt;/p></description></item><item><title>Structure And Meaning</title><link>https://shrsv.github.io/p/structure-and-meaning/</link><pubDate>Thu, 20 Mar 2025 20:41:21 +0530</pubDate><guid>https://shrsv.github.io/p/structure-and-meaning/</guid><description>&lt;p>&amp;ldquo;Up, down, up, down, up, down, &amp;hellip;&amp;rdquo;&lt;/p>
+&lt;p>What comes next?&lt;/p>
+&lt;p>You know the answer - it is &amp;ldquo;Up&amp;rdquo;&lt;/p>
+&lt;p>How did you know it?&lt;/p>
+&lt;p>Your mind inferred some sort of structure, and made a guess&lt;/p>
+&lt;p>I mean - we do not know - what truly &lt;em>will&lt;/em> come next.&lt;/p>
+&lt;p>But we are pretty sure - due to the repetition - and we expect it to be &amp;ldquo;up&amp;rdquo;.&lt;/p>
+&lt;p>There could be a breakage of pattern, but the fact that
+we expected an outcome - that hints at underlying structure.&lt;/p>
+&lt;p>Look at your favorite music&lt;/p>
+&lt;p>There is a structure to that - and one almost waits for one&amp;rsquo;s
+favorite parts of the music. At least I do.&lt;/p>
+&lt;p>So - our feeling of &amp;ldquo;familiarity&amp;rdquo; hints at what makes things
+meaningful to us.&lt;/p>
+&lt;p>Consider something like the following:&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 544 41"
+>
+&lt;g transform='translate(8,16)'>
+&lt;text text-anchor='middle' x='0' y='4' fill='currentColor' style='font-size:1em'>"&lt;/text>
+&lt;text text-anchor='middle' x='0' y='20' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='8' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='8' y='20' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='16' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='16' y='20' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='24' y='4' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='24' y='20' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='32' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='32' y='20' fill='currentColor' style='font-size:1em'>j&lt;/text>
+&lt;text text-anchor='middle' x='40' y='4' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='40' y='20' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='48' y='4' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='48' y='20' fill='currentColor' style='font-size:1em'>;&lt;/text>
+&lt;text text-anchor='middle' x='56' y='4' fill='currentColor' style='font-size:1em'>j&lt;/text>
+&lt;text text-anchor='middle' x='56' y='20' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='64' y='4' fill='currentColor' style='font-size:1em'>;&lt;/text>
+&lt;text text-anchor='middle' x='64' y='20' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='72' y='4' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='72' y='20' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='80' y='4' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='80' y='20' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='88' y='4' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='88' y='20' fill='currentColor' style='font-size:1em'>j&lt;/text>
+&lt;text text-anchor='middle' x='96' y='4' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='96' y='20' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='104' y='4' fill='currentColor' style='font-size:1em'>p&lt;/text>
+&lt;text text-anchor='middle' x='104' y='20' fill='currentColor' style='font-size:1em'>;&lt;/text>
+&lt;text text-anchor='middle' x='112' y='4' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='112' y='20' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='120' y='4' fill='currentColor' style='font-size:1em'>v&lt;/text>
+&lt;text text-anchor='middle' x='120' y='20' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='128' y='4' fill='currentColor' style='font-size:1em'>m&lt;/text>
+&lt;text text-anchor='middle' x='128' y='20' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='136' y='4' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='136' y='20' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='144' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='144' y='20' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='152' y='4' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='152' y='20' fill='currentColor' style='font-size:1em'>j&lt;/text>
+&lt;text text-anchor='middle' x='160' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='160' y='20' fill='currentColor' style='font-size:1em'>;&lt;/text>
+&lt;text text-anchor='middle' x='168' y='4' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='168' y='20' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='176' y='4' fill='currentColor' style='font-size:1em'>j&lt;/text>
+&lt;text text-anchor='middle' x='176' y='20' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='184' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='184' y='20' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='192' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='192' y='20' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='200' y='4' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='200' y='20' fill='currentColor' style='font-size:1em'>;&lt;/text>
+&lt;text text-anchor='middle' x='208' y='4' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='208' y='20' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='216' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='216' y='20' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='224' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='224' y='20' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='232' y='4' fill='currentColor' style='font-size:1em'>j&lt;/text>
+&lt;text text-anchor='middle' x='232' y='20' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='240' y='4' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='240' y='20' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='248' y='4' fill='currentColor' style='font-size:1em'>;&lt;/text>
+&lt;text text-anchor='middle' x='248' y='20' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='256' y='4' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='256' y='20' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='264' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='264' y='20' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='272' y='4' fill='currentColor' style='font-size:1em'>;&lt;/text>
+&lt;text text-anchor='middle' x='272' y='20' fill='currentColor' style='font-size:1em'>j&lt;/text>
+&lt;text text-anchor='middle' x='280' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='280' y='20' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='288' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='288' y='20' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='296' y='4' fill='currentColor' style='font-size:1em'>j&lt;/text>
+&lt;text text-anchor='middle' x='296' y='20' fill='currentColor' style='font-size:1em'>;&lt;/text>
+&lt;text text-anchor='middle' x='304' y='4' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='304' y='20' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='312' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='312' y='20' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='320' y='4' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='320' y='20' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='328' y='4' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='328' y='20' fill='currentColor' style='font-size:1em'>j&lt;/text>
+&lt;text text-anchor='middle' x='336' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='336' y='20' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='344' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='344' y='20' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='352' y='4' fill='currentColor' style='font-size:1em'>j&lt;/text>
+&lt;text text-anchor='middle' x='352' y='20' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='360' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='360' y='20' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='368' y='4' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='368' y='20' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='376' y='4' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='376' y='20' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='384' y='4' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='384' y='20' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='392' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='392' y='20' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='400' y='4' fill='currentColor' style='font-size:1em'>j&lt;/text>
+&lt;text text-anchor='middle' x='400' y='20' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='408' y='4' fill='currentColor' style='font-size:1em'>;&lt;/text>
+&lt;text text-anchor='middle' x='408' y='20' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='416' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='416' y='20' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='424' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='424' y='20' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='432' y='4' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='432' y='20' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='440' y='4' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='440' y='20' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='448' y='4' fill='currentColor' style='font-size:1em'>j&lt;/text>
+&lt;text text-anchor='middle' x='448' y='20' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='456' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='456' y='20' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='464' y='4' fill='currentColor' style='font-size:1em'>;&lt;/text>
+&lt;text text-anchor='middle' x='464' y='20' fill='currentColor' style='font-size:1em'>-&lt;/text>
+&lt;text text-anchor='middle' x='472' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='472' y='20' fill='currentColor' style='font-size:1em'>-&lt;/text>
+&lt;text text-anchor='middle' x='480' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='480' y='20' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='488' y='4' fill='currentColor' style='font-size:1em'>k&lt;/text>
+&lt;text text-anchor='middle' x='488' y='20' fill='currentColor' style='font-size:1em'>-&lt;/text>
+&lt;text text-anchor='middle' x='496' y='4' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='496' y='20' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='504' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='504' y='20' fill='currentColor' style='font-size:1em'>=&lt;/text>
+&lt;text text-anchor='middle' x='512' y='20' fill='currentColor' style='font-size:1em'>-&lt;/text>
+&lt;text text-anchor='middle' x='520' y='20' fill='currentColor' style='font-size:1em'>-&lt;/text>
+&lt;text text-anchor='middle' x='528' y='20' fill='currentColor' style='font-size:1em'>-&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;p>Something random like that - doesn&amp;rsquo;t hold our attention much.&lt;/p>
+&lt;p>You skip through such stuff.&lt;/p>
+&lt;p>Why? Because we cannot figure out - &amp;ldquo;What does it mean?&amp;rdquo;&lt;/p>
+&lt;p>So the biggest point of our life is that we get a feeling
+of familiarity - that we get meaning.&lt;/p>
+&lt;p>We may be wrong sometimes as well - that&amp;rsquo;s part of the adventure but that sense of familiarity is what keeps us interested in
+music, story, problems.&lt;/p>
+&lt;p>The possibility of becoming familiar is the most alluring part
+of music.&lt;/p>
+&lt;p>Likewise, it is difficult for us to keep any interest in things
+that seem random, things that we cannot seem to comprehend, and
+things which we think we will &lt;em>never&lt;/em> understand or become familiar with.&lt;/p>
+&lt;p>So - to be interested - we must perceive at least part of the underlying
+structure of the thing, and hope that you can unravel more, test yourself
+moe.&lt;/p>
+&lt;p>That&amp;rsquo;s important.&lt;/p>
+&lt;p>I am building organiazations, such as &lt;a class="link" href="https://hexmos.com" target="_blank" rel="noopener"
+>Hexmos&lt;/a> and software
+tools like &lt;a class="link" href="https://hexmos.com/liveapi" target="_blank" rel="noopener"
+>LiveAPI&lt;/a>&lt;/p>
+&lt;p>Our goal with the tools and teams that we build is - to aim to construct
+interesting, alluring and satisfying structures.&lt;/p>
+&lt;p>Another observation - I&amp;rsquo;ve had is - a person who seems not to be able
+to find their place in the world - feels disoriented, becomes
+more and more of a madman by the day.&lt;/p>
+&lt;p>Look at any strongly religious person - you will rarely see them
+depressed and dejected beyond comprehension - the reason being - their
+&lt;em>mind is structured under a scheme&lt;/em>. There is a structured organization to their mind, so it
+is not falling apart.&lt;/p>
+&lt;p>A mind that is so sceptical - that it is unable to build any structure
+at all - cannot survive - because it is too unstable, too random - too
+free.&lt;/p>
+&lt;p>From a psychological, or mental level, excess freedom of &amp;ldquo;anything is possible&amp;rdquo;
+means - insufficient structure - leads to lack of meaning, purpose and a constant
+sense of &amp;ldquo;falling apart&amp;rdquo;.&lt;/p>
+&lt;p>So we want good structure - along with a sense of adventure to unravel more of it.
+That is what gives meaning to human life.&lt;/p></description></item><item><title>Two Word Decisions</title><link>https://shrsv.github.io/p/two-word-decisions/</link><pubDate>Fri, 14 Mar 2025 20:41:21 +0530</pubDate><guid>https://shrsv.github.io/p/two-word-decisions/</guid><description>&lt;p>I&amp;rsquo;ve always been interested in decisions—two ways, really.&lt;/p>
+&lt;p>I wanted to make better decisions.&lt;/p>
+&lt;p>I wanted to make decisions in a better manner.&lt;/p>
+&lt;p>When it comes to making decisions better, what I care about is &lt;strong>conserving energy&lt;/strong> while still getting a &lt;strong>decision done and executed&lt;/strong>.&lt;/p>
+&lt;p>In my &lt;a class="link" href="https://shrsv.github.io/p/1741889488" >previous post&lt;/a>, I explained how &lt;strong>vagueness is the enemy of action&lt;/strong>.&lt;/p>
+&lt;p>In this post, I’ll share a trick to fight against vagueness and fight for clarity.&lt;/p>
+&lt;h2 id="your-willpower-is-limited">Your Willpower Is Limited
+&lt;/h2>&lt;p>We know that willpower is a scarce resource—like a battery that gets drained throughout the day as we make decisions and take actions.&lt;/p>
+&lt;p>Every decision we make taxes this willpower battery.&lt;/p>
+&lt;p>And sometimes, we get stuck—overthinking, worrying, or somehow unable to proceed smoothly.&lt;/p>
+&lt;p>This usually happens when we’re faced with some sort of &lt;em>problem&lt;/em>, big or small.&lt;/p>
+&lt;p>Especially when &lt;em>stuck&lt;/em> on something, inaction can be fatal.&lt;/p>
+&lt;p>As noted earlier, &lt;a class="link" href="https://shrsv.github.io/p/1741024971" >learning is movement&lt;/a>.&lt;/p>
+&lt;p>My general experience has been that I have high self-control and willpower in the mornings, when the battery is full.&lt;/p>
+&lt;p>But as the day progresses, my powers wane, and evenings and nights become more vulnerable.&lt;/p>
+&lt;p>I’m more likely to waste time, break good eating habits, slouch in my posture, or falter in other ways due to this lack of willpower.&lt;/p>
+&lt;h2 id="how-to-get-unstuckwithout-taxing-your-willpower">How to Get Unstuck—Without Taxing Your Willpower
+&lt;/h2>&lt;p>Not only do we want to get unstuck and move on to the next action—which will give us more clues to solve the problem at hand—but we also want to do it without draining our willpower reserves.&lt;/p>
+&lt;p>When we’re stuck, what we need is a nudge toward something slightly better.&lt;/p>
+&lt;p>Say I’m considering grabbing some unhealthy food, breaking my intermittent fast, or something like that.&lt;/p>
+&lt;p>If I’m fortunate enough to notice the moment, I can try to make my next choice a &lt;em>conscious two-word decision&lt;/em>.&lt;/p>
+&lt;p>&lt;strong>Health, or Taste?&lt;/strong>&lt;/p>
+&lt;p>Just two words. I’m asking myself: Will I let myself be guided by my desire for health or my desire for taste?&lt;/p>
+&lt;p>Or take another example—I could &lt;em>consume one more social media post or YouTube video, or I could organize my thoughts and put them into writing&lt;/em>. I can ask myself:&lt;/p>
+&lt;p>&lt;strong>Consume, or Create?&lt;/strong>&lt;/p>
+&lt;h2 id="its-perfectly-fine-to-choose-the-worse-option-consciously">It’s Perfectly Fine to Choose the “Worse” Option Consciously
+&lt;/h2>&lt;p>The point of the two-word decision is conscious decision-making. When we’re about to make a potentially harmful choice, it’s like &lt;em>prompting ourselves with a question&lt;/em>—and if the answer is yes, that’s fine, because it’s a deliberate choice.&lt;/p>
+&lt;p>Here are some decisions I’ve made:&lt;/p>
+&lt;ul>
+&lt;li>Rest, or Exercise?&lt;/li>
+&lt;li>Entertainment, or Business?&lt;/li>
+&lt;li>Sleep, or Walk?&lt;/li>
+&lt;li>Slump, or Sit Straight?&lt;/li>
+&lt;li>Worry, or Act?&lt;/li>
+&lt;li>Twitter, or Book?&lt;/li>
+&lt;li>Assume, or Calculate?&lt;/li>
+&lt;li>Trust, or Verify?&lt;/li>
+&lt;li>Rest Now, or Solve the Problem?&lt;/li>
+&lt;/ul>
+&lt;h2 id="a-few-technicalities">A Few Technicalities
+&lt;/h2>&lt;p>These are things I personally find helpful:&lt;/p>
+&lt;ul>
+&lt;li>Try to notice just as you’re about to do something unproductive.&lt;/li>
+&lt;li>Put the potentially harmful option first (Option 1), then think of a slightly better or more inspiring alternative (Option 2).&lt;/li>
+&lt;li>There’s no right or wrong decision here—as long as it’s conscious.&lt;/li>
+&lt;/ul>
+&lt;h2 id="the-bottom-line">The Bottom Line
+&lt;/h2>&lt;p>Two-word decisions can nudge you toward better choices in a better way. Give them a try and let me know if they help you.&lt;/p></description></item><item><title>Vagueness is the Enemy of Action</title><link>https://shrsv.github.io/p/1741889488/</link><pubDate>Thu, 13 Mar 2025 18:11:28 +0000</pubDate><guid>https://shrsv.github.io/p/1741889488/</guid><description>&lt;p>I wasted some time today—I realized it when I looked back at how the time slipped away.&lt;/p>
+&lt;p>Naturally, I wondered: what went wrong here?&lt;/p>
+&lt;p>My mind churned for a bit, wrestling with the question, until an answer popped up: &lt;em>vague thoughts&lt;/em>.&lt;/p>
+&lt;p>See, I’d been chasing &lt;em>correct&lt;/em> judgment, aiming for &lt;em>correct&lt;/em> thoughts.&lt;/p>
+&lt;p>In that pursuit of getting it right, I ended up making things more &lt;em>complex&lt;/em>.&lt;/p>
+&lt;p>And that complexity? It spiraled so far that I deluded myself—straying from the simple approach I could’ve taken.&lt;/p>
+&lt;p>After mulling it over, a kind of &lt;strong>Grid of Action&lt;/strong> sprang to mind, and here’s how it looks:&lt;/p>
+&lt;ul>
+&lt;li>&lt;em>Vague and Wrong&lt;/em> → No action&lt;/li>
+&lt;li>&lt;em>Vague and Correct&lt;/em> → No action&lt;/li>
+&lt;li>&lt;em>Simple and Wrong&lt;/em> → Action&lt;/li>
+&lt;li>&lt;em>Simple and Correct&lt;/em> → Action&lt;/li>
+&lt;/ul>
+&lt;p>Now, someone might object: “If it’s vague, how can it be judged as correct or wrong?”&lt;/p>
+&lt;p>Fair point—it’s tricky to pin down something so hazy.&lt;/p>
+&lt;p>But that’s the thing: both possibilities exist in that murkiness.&lt;/p>
+&lt;p>Whether it leans right or wrong in effect, it doesn’t matter—it’s a useless exercise either way. Why? Because no action comes of it.&lt;/p>
+&lt;p>So, here’s the takeaway: if we want to &lt;em>do&lt;/em>, to stay engaged, to move, to experience life, we’ve got to keep our thoughts simple at all times.&lt;/p>
+&lt;p>Complexity isn’t the enemy—it can be tackled—but it’s best surmounted through a thousand simple steps.&lt;/p>
+&lt;p>Each one needs to be manageable, something we can actually grip, if we’re going to act at all.&lt;/p>
+&lt;p>So complexity is not the enemy, but vagueness definitely is - that of action.&lt;/p></description></item><item><title>RAG: Not a Silver Bullet?</title><link>https://shrsv.github.io/p/1741723293/</link><pubDate>Tue, 11 Mar 2025 20:01:33 +0000</pubDate><guid>https://shrsv.github.io/p/1741723293/</guid><description>&lt;h2 id="a-few-ideas-about-rag">A Few Ideas About RAG
+&lt;/h2>&lt;p>As I keep pouring in efforts to build &lt;a class="link" href="https://hexmos.com/liveapi/" target="_blank" rel="noopener"
+>LiveAPI&lt;/a>, I get new ideas on how to make it better from time to time.&lt;/p>
+&lt;p>There is a constant feeling that maybe we should have some sort of Chatbot on top of the structured API information we generate at scale.&lt;/p>
+&lt;p>People say:&lt;/p>
+&lt;p>&amp;ldquo;Nobody reads documentation these days&amp;rdquo;&lt;/p>
+&lt;p>&amp;ldquo;I don&amp;rsquo;t think anyone will read docs anymore&amp;rdquo;&lt;/p>
+&lt;p>&amp;ldquo;Nobody cares about documentation. Code is documentation&amp;rdquo;&lt;/p>
+&lt;p>And so on.&lt;/p>
+&lt;p>What they also sort of imply is that - we just want to ask a Chatbot or be surfaced with the relevant information automagically in the right place at the right time.&lt;/p>
+&lt;h2 id="we-may-build-a-chatbot---at-some-point-in-the-future">We may build a Chatbot - at some point in the future
+&lt;/h2>&lt;p>But for now - this post will be about one of the approaches to building Chatbots that seems to be making noise across places like Hacker News - called &amp;ldquo;RAG&amp;rdquo;&lt;/p>
+&lt;p>RAG stands for Retrieval Augmented Generation&lt;/p>
+&lt;p>The LLM in its primordial state is like our long-term memory or impressions. It sort of has a vague recollection of facts, ideas and sentiments. But it has to be grounded with something more concrete - before a specific answer can be given.&lt;/p>
+&lt;p>RAG is about - helping the LLM remember better, while also helping it transform current or specific information into the framework of its answers.&lt;/p>
+&lt;h2 id="rag-flaws---still-too-literal">RAG Flaws - Still too literal
+&lt;/h2>&lt;p>I&amp;rsquo;ve heard from multiple quarters - with those having comparatively deeper knowledge on the topic that RAGs often underperform.&lt;/p>
+&lt;p>&amp;ldquo;Just tag your docs with keywords - don&amp;rsquo;t bother with RAG&amp;rdquo;&lt;/p>
+&lt;p>I&amp;rsquo;ve heard the above opinion expressed multiple times.&lt;/p>
+&lt;p>Consider the following case mentioned on an &lt;a class="link" href="https://news.ycombinator.com/item?id=42174829" target="_blank" rel="noopener"
+>HN Thread&lt;/a>.&lt;/p>
+&lt;p>There&amp;rsquo;s a textual records of various activities performed day to day by a bunch of people.&lt;/p>
+&lt;p>Now we are curious - &amp;ldquo;Guess the occupation of person X&amp;rdquo;&lt;/p>
+&lt;p>The augmentation happens purely based on the keywords present in this question.&lt;/p>
+&lt;p>Imagine now person X has been going to various chemistry conferences, etc but her occupation is not mentioned anywhere.&lt;/p>
+&lt;p>Pure RAG approaches most probably will fail here because they cannot connect &amp;ldquo;attends chemistry conference&amp;rdquo; to &amp;ldquo;occupation&amp;rdquo; - because the keywords are sort of different&lt;/p>
+&lt;h2 id="what-is-the-way-around">What is the way around?
+&lt;/h2>&lt;p>For things like above - we fall back to the old search and information retrieval mechanisms.&lt;/p>
+&lt;p>We build a semantic graph - putting related nodes together.&lt;/p>
+&lt;p>We do PageRank, or similar alternatives.&lt;/p>
+&lt;p>We essentially do search first.&lt;/p>
+&lt;p>The LLM layer is mostly good for &amp;ldquo;summarizing&amp;rdquo; the findings.&lt;/p>
+&lt;p>So - the role of something like RAG becomes much more limited, or sometimes even irrelevant.&lt;/p>
+&lt;p>Many AI apps may end up with Search followed by Summarization.&lt;/p></description></item><item><title>Mastery's Price: Paid in Life Itself</title><link>https://shrsv.github.io/p/1741373607/</link><pubDate>Fri, 07 Mar 2025 18:53:27 +0000</pubDate><guid>https://shrsv.github.io/p/1741373607/</guid><description>&lt;h2 id="mastery-demands-payment-in-life-units">Mastery Demands Payment in Life Units
+&lt;/h2>&lt;p>Let&amp;rsquo;s think a bit about the 10,000 hour rule.&lt;/p>
+&lt;p>It says that &lt;em>mastery&lt;/em> in a serious discipline demands a minimum
+focused investment of around 10,000 hours in &lt;em>deliberate practice&lt;/em>.&lt;/p>
+&lt;p>Deliberate practice means - finding benchmark behaviors, breaking
+them down, and performing them consistently to get nearer
+to perfection.&lt;/p>
+&lt;p>10,000 hours roughly breaks down like this:&lt;/p>
+&lt;ul>
+&lt;li>9 years of effort, given 3 hours per day, 365 days a year&lt;/li>
+&lt;li>13 years of effort, given 2 hours per day, 365 days a year&lt;/li>
+&lt;li>27 years of effort, given 1 hour per day, 365 days year&lt;/li>
+&lt;/ul>
+&lt;p>These are staggering numbers - when we look at how short our lives
+are.&lt;/p>
+&lt;p>Half our lives - we are either sleeping or working on maintenance
+tasks.&lt;/p>
+&lt;p>The other half - we&amp;rsquo;re trapped in various maladies and difficulties&lt;/p>
+&lt;ul>
+&lt;li>and rarely give sufficient time and energy to deliberately get
+better at something.&lt;/li>
+&lt;/ul>
+&lt;p>For most humans - mastering even 1 serious discipline is a lifetime
+achievement.&lt;/p>
+&lt;p>The vast majority of humans reach their graves having mastered not
+a single serious discipline in their lives.&lt;/p>
+&lt;p>That means, the vast majority of humans have never experienced
+peak performance within themselves, they have never known what
+it means to fulfill even a portion of their real potentials.&lt;/p>
+&lt;h2 id="why-should-we-care-about-mastery">Why should we care about &amp;ldquo;Mastery&amp;rdquo;?
+&lt;/h2>&lt;p>It may sound like a vague word invented by people with too much time
+sometimes on their hands.&lt;/p>
+&lt;p>But really - it isn&amp;rsquo;t.&lt;/p>
+&lt;p>There are two sides to &amp;ldquo;Mastery&amp;rdquo;.&lt;/p>
+&lt;p>First - the less important side: The social side.&lt;/p>
+&lt;p>A masterful performance is usually judged in a social context.&lt;/p>
+&lt;p>In any era - we have the top scientists, sportsmen, politicians,
+actors, and so on.&lt;/p>
+&lt;p>We have the historical greats, Newton, Einstein, Beethoven, and on
+and on.&lt;/p>
+&lt;p>We all know their names.&lt;/p>
+&lt;p>They were much, much better than their contemporaries. Some of them
+were better than anyone ever in their fields of expertise.&lt;/p>
+&lt;p>It is sort of a social peak - and masters are at the top - in
+their areas of expertise.&lt;/p>
+&lt;p>But as I said - there are two sides to &amp;ldquo;Mastery&amp;rdquo;, and the social
+side - of being at the top of list is of lesser importance.&lt;/p>
+&lt;h2 id="the-more-important-side-of-mastery">The More Important Side of &amp;ldquo;Mastery&amp;rdquo;
+&lt;/h2>&lt;p>The more important side of &amp;ldquo;Mastery&amp;rdquo; is that - it hits at the
+core of what it means to be a human.&lt;/p>
+&lt;p>You may look at the animal kingdom - you&amp;rsquo;ll find no adult animal practicing
+getting better in any area of life, and trying to master it.&lt;/p>
+&lt;p>There is no such effort.&lt;/p>
+&lt;p>In humans - we can see a higher state and try for it. We understand
+this term called &amp;ldquo;potential&amp;rdquo;.&lt;/p>
+&lt;p>You know that if you keep practicing, and trying, you will eventually
+get better - and the experience of life will change for you.&lt;/p>
+&lt;p>That is the key driver for Mastery.&lt;/p>
+&lt;p>And most importantly? The &lt;em>experience of mastery cannot be bought or
+sold in the market&lt;/em>.&lt;/p>
+&lt;p>Once you&amp;rsquo;ve mastered something - the experience you get out of it -
+is solely your own. When performing - what you go through psychologically
+cannot be counted through numbers.&lt;/p>
+&lt;p>Nobody can buy your experience. Sure, they may hire you, they may associate
+with you - but nobody can buy the experience of mastery.&lt;/p>
+&lt;p>One struggles for a decade or more - and pay a hefty price in &lt;strong>time, effort
+and emotions&lt;/strong> &amp;ndash; all for a simple experience of mastery.&lt;/p>
+&lt;p>And no rich person, or a powerful person, can buy or grab it for themselves.&lt;/p>
+&lt;p>The only currency through which mastery can be obtained is life itself.&lt;/p>
+&lt;h2 id="what-mastery-stands-for-in-human-life">What Mastery Stands For in Human Life
+&lt;/h2>&lt;p>The desire and effort for mastery in any area of human life stands for
+intelligence, the human capacity for envisioning better states, and working
+for it.&lt;/p>
+&lt;p>It is waking up the inner human within the animal, and to help it guide
+towards a higher potential.&lt;/p>
+&lt;p>That is what Mastery means, and it is worth having a few words in our
+vocabularies to remind ourselves of such a great potential.&lt;/p></description></item><item><title>Leadership: Action That Inspires</title><link>https://shrsv.github.io/p/1741287251/</link><pubDate>Thu, 06 Mar 2025 18:54:11 +0000</pubDate><guid>https://shrsv.github.io/p/1741287251/</guid><description>&lt;h2 id="a-definition-of-leadership">A Definition of Leadership
+&lt;/h2>&lt;p>These days the word &lt;em>leadership&lt;/em> has become loaded with
+many meanings, explanations, and imagery across various
+media.&lt;/p>
+&lt;p>But in its essence - leadership simply means &lt;em>to lead&lt;/em>.&lt;/p>
+&lt;p>The roots of the word &lt;em>lead&lt;/em> emerge from an Old English word &lt;em>laeden&lt;/em>
+which means &amp;ldquo;to go first, to guide&amp;rdquo;.&lt;/p>
+&lt;p>Therefore - leadership is closely tied to:&lt;/p>
+&lt;ol>
+&lt;li>Taking action&lt;/li>
+&lt;li>Taking action &lt;em>before others&lt;/em> (such that others &lt;em>follow&lt;/em>)&lt;/li>
+&lt;/ol>
+&lt;p>There is an inherent sense of adventure - in &amp;ldquo;going first&amp;rdquo;.&lt;/p>
+&lt;p>But an even more important aspect of this is that - the direction
+and action of the leader - encourage others to follow suit.&lt;/p>
+&lt;p>Therefore in its elemental form: &lt;strong>Leadership is action that inspires
+further action in others&lt;/strong>.&lt;/p>
+&lt;h2 id="how-to-identify-leadership-potential">How to Identify Leadership Potential
+&lt;/h2>&lt;p>While leadership at its core is about taking action and inspiring
+others to do the same - let&amp;rsquo;s take a step back.&lt;/p>
+&lt;p>Why does anyone take action?&lt;/p>
+&lt;p>In day to day life, we see two types of actions:&lt;/p>
+&lt;ol>
+&lt;li>Asking&lt;/li>
+&lt;li>Proposing&lt;/li>
+&lt;/ol>
+&lt;p>Usually - you are asking because you&amp;rsquo;re not sure what needs doing.&lt;/p>
+&lt;p>Or maybe you don&amp;rsquo;t want to put in the work necessary to settle on
+a direction.&lt;/p>
+&lt;p>Getting more certainty often demands more action!&lt;/p>
+&lt;p>If you&amp;rsquo;re low on energy or tired - you&amp;rsquo;re unlikely to make demands on
+yourself
+to get clarity or conviction.&lt;/p>
+&lt;p>So those lacking conviction or those unwilling to act by themselves to
+acquire conviction are usually the ones asking.&lt;/p>
+&lt;ul>
+&lt;li>&amp;ldquo;Shall I do X to solve Y?&amp;rdquo;&lt;/li>
+&lt;/ul>
+&lt;p>Hidden under the questions like the above - we see that there&amp;rsquo;s no
+conviction,
+only a low-effort desire to find out what needs doing.&lt;/p>
+&lt;p>However, the ones who lead aren&amp;rsquo;t asking these sorts of questions.&lt;/p>
+&lt;p>Instead - they are doing the following:&lt;/p>
+&lt;ol>
+&lt;li>They&amp;rsquo;re experimenting and figuring things out to build personal
+conviction.&lt;/li>
+&lt;li>Once they have conviction - they are making proposals to others.&lt;/li>
+&lt;li>They may seek inputs, suggestions, or support from others - but they are
+in action, moving the agenda forward.&lt;/li>
+&lt;/ol>
+&lt;p>In short, future leaders are working to acquire conviction and then propose:&lt;/p>
+&lt;ul>
+&lt;li>&amp;ldquo;We must do X to solve Y. I will start with doing a part of X. Do you have
+any suggestions on my proposal? Would you like to join me in this effort?&amp;rdquo;&lt;/li>
+&lt;/ul>
+&lt;p>Look at the amount of extra effort needed to make a proposal:&lt;/p>
+&lt;ul>
+&lt;li>Studying the situation&lt;/li>
+&lt;li>Taking action to deepen understanding&lt;/li>
+&lt;li>Developing conviction&lt;/li>
+&lt;li>Making a proposal to others&lt;/li>
+&lt;li>Take comments, criticism, and include others in the agenda&lt;/li>
+&lt;/ul>
+&lt;h2 id="leadership-in-practice">Leadership in Practice
+&lt;/h2>&lt;p>So what does it take to lead?&lt;/p>
+&lt;p>One must continuously study the field and situation.&lt;/p>
+&lt;p>And one must take action to validate one&amp;rsquo;s ideas and develop conviction.&lt;/p>
+&lt;p>The conviction must then be used to fuel a compelling proposal.&lt;/p>
+&lt;p>Finally, the proposal must be refined with the inputs from others&amp;hellip;&lt;/p>
+&lt;p>And this will lead to a group acting together.&lt;/p>
+&lt;p>But it all starts with an individual&amp;rsquo;s desire and willingness to act first.&lt;/p></description></item><item><title>Practical Focus: Saying "Not Now" Instead of "No"</title><link>https://shrsv.github.io/p/1741201733/</link><pubDate>Wed, 05 Mar 2025 19:08:53 +0000</pubDate><guid>https://shrsv.github.io/p/1741201733/</guid><description>&lt;p>People often say, &amp;ldquo;Focus is about saying No.&amp;rdquo;&lt;/p>
+&lt;p>But experience tells us it is hard to say &amp;ldquo;no&amp;rdquo; to things we want to do.&lt;/p>
+&lt;p>And every &amp;ldquo;no&amp;rdquo; that you muster chips away at your limited supply of willpower.&lt;/p>
+&lt;p>So, how can we make focus practical?&lt;/p>
+&lt;p>That is, what does it mean to arrange for practical focus?&lt;/p>
+&lt;p>Replace &amp;ldquo;no&amp;rdquo; with &amp;ldquo;not now.&amp;rdquo;&lt;/p>
+&lt;p>How?&lt;/p>
+&lt;p>Many people have spoken and written about &amp;ldquo;time blocking.&amp;rdquo;&lt;/p>
+&lt;p>The essence of &amp;ldquo;time blocking&amp;rdquo; is not to say &amp;ldquo;no,&amp;rdquo; but rather to adapt the phrase &amp;ldquo;not now.&amp;rdquo;&lt;/p>
+&lt;ul>
+&lt;li>Yes, you can watch a movie. But not now.&lt;/li>
+&lt;li>Yes, you can kill time on YouTube. But not now.&lt;/li>
+&lt;li>Yes, you can respond to chat/email. But not now.&lt;/li>
+&lt;li>Yes, you can worry about 1000 things not going the way you want. But not now.&lt;/li>
+&lt;/ul>
+&lt;p>See how simple it is?&lt;/p>
+&lt;p>You don&amp;rsquo;t have to outright reject a low-value activity.&lt;/p>
+&lt;p>You just have to delay it.&lt;/p>
+&lt;p>And many times, if you succeed in delaying it, you&amp;rsquo;ll also succeed in rejecting it.&lt;/p>
+&lt;p>In more positive terms, time blocking means the following:&lt;/p>
+&lt;ul>
+&lt;li>A duration (4 hours of time, starting now)&lt;/li>
+&lt;li>The most important thing that deserves your focus&lt;/li>
+&lt;li>A defensive fortification mantra called &amp;ldquo;not now&amp;rdquo; directed at every distraction&lt;/li>
+&lt;/ul></description></item><item><title>LiveAPI Rebuilt: A Scalable and Reliable API Documentation Tool</title><link>https://shrsv.github.io/p/1741111626/</link><pubDate>Tue, 04 Mar 2025 18:07:06 +0000</pubDate><guid>https://shrsv.github.io/p/1741111626/</guid><description>&lt;p>Hi there! I&amp;rsquo;m Shrijith Venkatrama, founder of Hexmos. Right now, I’m building &lt;a class="link" href="https://hexmos.com/liveapi" target="_blank" rel="noopener"
+>LiveAPI&lt;/a>, a tool designed to make generating API documentation from your code incredibly easy.&lt;/p>
+&lt;p>Over the past few months, we’ve been hard at work refining LiveAPI to be more robust, scalable, and user-friendly. Here’s a look at what we’ve been up to.&lt;/p>
+&lt;h2 id="what-we-did-in-november-and-december">What We Did in November and December
+&lt;/h2>&lt;p>Towards the end of last year, we ramped up our outreach efforts, connecting with engineering leaders, CTOs, technical freelancers, and experienced developers. Many of them were generous enough to try out LiveAPI and provide us with invaluable feedback.&lt;/p>
+&lt;p>We closely observed how users onboarded, interacted with, and benefited from LiveAPI. What became clear was that while the concept was strong, the product needed significant improvements before it could truly serve the needs of professional developers. With that realization, we dedicated the past three months to making fundamental enhancements.&lt;/p>
+&lt;h2 id="identifying-key-issues">Identifying Key Issues
+&lt;/h2>&lt;p>Through our interactions and testing, we uncovered several major pain points:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Handling Large Codebases&lt;/strong>: Many users experienced failures when processing large repositories, making the tool impractical for sizable projects.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Challenges with Multi-Project Repos&lt;/strong>: Codebases structured as monorepos or with multiple subprojects often encountered errors.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Pricing Concerns&lt;/strong>: Users expressed a preference for API-count-based pricing rather than a repository-based model.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Lack of Framework Support&lt;/strong>: Several critical frameworks were missing from our compatibility list, limiting adoption.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Accuracy Issues&lt;/strong>: Due to size limitations, the accuracy of generated documentation was sometimes inconsistent.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Unstable LLM API Calls&lt;/strong>: Intermittent failures occurred when making LLM-based API calls, and we lacked a robust retry mechanism.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Uninspiring Documentation Design&lt;/strong>: The generated documentation needed a more polished, professional, and visually appealing design.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="re-architecting-liveapi-the-solution">Re-Architecting LiveAPI: The Solution
+&lt;/h2>&lt;p>Initially, we thought we could address these issues with incremental fixes. However, as we dug deeper, it became clear that a more fundamental overhaul was necessary. Over the past three months, we completely re-architected LiveAPI’s backend to build a more stable and scalable system.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Event-Driven Architecture&lt;/strong>: We transitioned to a fully event-driven approach, ensuring better scalability and responsiveness.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Redis-Powered Queues and Streams&lt;/strong>: We adopted Redis to efficiently manage queues, data structures, events, and streams, significantly improving performance.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Reliable LLM Interactions&lt;/strong>: We developed new mechanisms to enhance the reliability of LLM-based API calls, minimizing failures and improving consistency.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Scalability for Large Repos&lt;/strong>: We tackled repository size limitations, enabling us to generate documentation for 150-200 APIs per project with ease. This number is expected to grow further as our optimizations continue.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Future-Proof Infrastructure&lt;/strong>: The event-driven architecture allows us to scale dynamically based on demand, ensuring a seamless experience for users.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Enhanced Documentation Design&lt;/strong>: Improving the documentation layout and visual appeal required a steep learning curve for our team, but the result is a much more engaging and professional output.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="the-new-and-improved-liveapi-whats-next">The New and Improved LiveAPI: What’s Next?
+&lt;/h2>&lt;p>With these changes in place, LiveAPI now offers:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Higher Reliability&lt;/strong>: Automated document generation is now far more stable and dependable.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Better Support for Large Repositories&lt;/strong>: Even complex, multi-project repos can be processed with ease.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Visually Appealing Documentation&lt;/strong>: The new design makes API documentation more readable and professional.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Improved Accuracy&lt;/strong>: The enhancements result in more precise and complete API documentation.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Support 60+ Frameworks&lt;/strong>: We now support the top 15 languages and around 60 frameworks within them&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>We’re incredibly excited about these improvements and can’t wait to share them with our users. Stay tuned for the official release of the new LiveAPI, and if you haven’t tried it yet, now’s a great time to check it out!&lt;/p></description></item><item><title>Don't Add More Garbage to the World</title><link>https://shrsv.github.io/p/1741028143/</link><pubDate>Mon, 03 Mar 2025 18:55:43 +0000</pubDate><guid>https://shrsv.github.io/p/1741028143/</guid><description>&lt;p>Steve Jobs said taste is paramount to business leaders who wish to do well.&lt;/p>
+&lt;p>I think that&amp;rsquo;s a bit too abstract to put into practice on a day-to-day
+basis.&lt;/p>
+&lt;p>Instead, I prefer thinking of it this way: &amp;ldquo;Let&amp;rsquo;s not put more garbage
+into the world.&amp;rdquo;&lt;/p>
+&lt;p>That is, it is a virtue to be critical about one&amp;rsquo;s own works.&lt;/p>
+&lt;p>When our standards are high, and we refuse to pollute the lives of others
+due to greed, impatience, and such vices, we automatically imbibe &amp;ldquo;taste.&amp;rdquo;&lt;/p>
+&lt;p>No esoteric or mystical skill required this way.&lt;/p></description></item><item><title>Learning is Movement</title><link>https://shrsv.github.io/p/1741024971/</link><pubDate>Mon, 03 Mar 2025 18:03:05 +0000</pubDate><guid>https://shrsv.github.io/p/1741024971/</guid><description>&lt;p>Learning is movement, radical change. It is not about sitting still and absorbing information. It is about moving forward and making things happen.&lt;/p></description></item><item><title>Focusing Questions: The Key to Getting Things Done</title><link>https://shrsv.github.io/p/1740944326/</link><pubDate>Sun, 02 Mar 2025 19:38:46 +0000</pubDate><guid>https://shrsv.github.io/p/1740944326/</guid><description>&lt;p>There are essentially two types of people: those who are successful and those who ask &lt;strong>defocusing&lt;/strong> questions.&lt;/p>
+&lt;p>A &lt;strong>defocusing&lt;/strong> question is something like: &amp;ldquo;What can I do about this?&amp;rdquo;. This creates a huge list of busywork for you – which keeps you running around for a long time with very little results to show for it.&lt;/p>
+&lt;p>Instead, try a &lt;strong>FOCUSING&lt;/strong> question: &amp;ldquo;What is &lt;strong>ONE&lt;/strong> thing if I do, everything else becomes easier or irrelevant?&amp;rdquo;&lt;/p>
+&lt;p>You have to be really careful about it. If you pick an actually important thing, your life will become so much better because of this.&lt;/p></description></item></channel></rss>

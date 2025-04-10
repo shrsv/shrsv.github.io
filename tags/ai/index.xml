@@ -1,0 +1,1373 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ai on The Learning Loom</title><link>https://shrsv.github.io/tags/ai/</link><description>Recent content in Ai on The Learning Loom</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 12 Mar 2025 20:41:21 +0530</lastBuildDate><atom:link href="https://shrsv.github.io/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>About HippoRAG</title><link>https://shrsv.github.io/p/about-hipporag/</link><pubDate>Wed, 12 Mar 2025 20:41:21 +0530</pubDate><guid>https://shrsv.github.io/p/about-hipporag/</guid><description>&lt;p>These are some LLM-assisted exploration notes from the paper &lt;a class="link" href="https://arxiv.org/pdf/2405.14831" target="_blank" rel="noopener"
+>HippoRAG: Neurobiologically Inspired
+Long-Term Memory for Large Language Models&lt;/a>&lt;/p>
+&lt;h2 id="the-multi-hop-problem-in-rags">The Multi-Hop Problem in RAGs
+&lt;/h2>&lt;p>The idea of &amp;ldquo;hops&amp;rdquo; are important in RAG.&lt;/p>
+&lt;p>Consider this example.&lt;/p>
+&lt;p>Question 1:&lt;/p>
+&lt;p>&lt;em>&amp;ldquo;Who wrote Hamlet?&amp;rdquo;&lt;/em>&lt;/p>
+&lt;p>→ The answer (Shakespeare) is in one document.*&lt;/p>
+&lt;p>Question 2:&lt;/p>
+&lt;p>&lt;em>&amp;ldquo;Which university did the president of OpenAI attend?&amp;rdquo;&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>Step 1: Retrieve information on who the president of OpenAI is (e.g., Greg Brockman).&lt;/li>
+&lt;li>Step 2: Retrieve information on which university Greg Brockman attended (e.g., MIT).&lt;/li>
+&lt;/ul>
+&lt;h2 id="how-hipporag-achieves-a-single-step-multi-hop-retrieval">How HippoRAG Achieves a Single-Step Multi-Hop Retrieval
+&lt;/h2>&lt;p>Traditional RAG solutions, such as IRCoT (Iterative Retrieval Chain-of-Thought) depend on &lt;em>iterative retrieval&lt;/em> - kind of like looking up docs in a loop.&lt;/p>
+&lt;p>With HippoRAG, two mechanisms are combined to compress these multiple hops into one:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Building a knowledge graph (KG)&lt;/strong> where concepts and relationships are indexed.&lt;/li>
+&lt;li>&lt;strong>Using Personalized PageRank (PPR)&lt;/strong> to retrieve relevant paths across multiple documents in one query.&lt;/li>
+&lt;/ul>
+&lt;p>The benefits of the above combination makes HippoRAG:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Faster&lt;/strong> (avoids iterative retrieval)&lt;/li>
+&lt;li>&lt;strong>More accurate&lt;/strong> (find connections that isolated retrieval steps miss)&lt;/li>
+&lt;li>&lt;strong>Cheaper&lt;/strong> (reduce API calls and computation)&lt;/li>
+&lt;/ul>
+&lt;h2 id="how-hipporag-builds-its-knowledge-graph-kg">How HippoRAG Builds Its Knowledge Graph (KG)
+&lt;/h2>&lt;p>HippoRAG constructs a &lt;strong>schemaless knowledge graph&lt;/strong> from a text corpus by leveraging &lt;strong>large language models (LLMs)&lt;/strong> for &lt;strong>Open Information Extraction (OpenIE)&lt;/strong> and retrieval encoders for linking entities. This process enables &lt;strong>multi-hop reasoning in a single retrieval step&lt;/strong>.&lt;/p>
+&lt;h4 id="1-offline-indexing-building-the-graph">&lt;strong>1. Offline Indexing (Building the Graph)&lt;/strong>
+&lt;/h4>&lt;p>This step is analogous to how the &lt;strong>human neocortex encodes memory&lt;/strong>.&lt;/p>
+&lt;p>✅ &lt;strong>Extract Knowledge Graph Triples&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Uses an &lt;strong>instruction-tuned LLM&lt;/strong> (e.g., GPT-3.5) to &lt;strong>extract subject-predicate-object triples&lt;/strong> from text.
+&lt;ul>
+&lt;li>Example:&lt;br>
+&lt;strong>Input Passage:&lt;/strong> &amp;ldquo;Steve Jobs co-founded Apple in 1976.&amp;rdquo;&lt;br>
+&lt;strong>Extracted Triples:&lt;/strong>
+&lt;ul>
+&lt;li>&lt;code>(Steve Jobs, co-founded, Apple)&lt;/code>&lt;/li>
+&lt;li>&lt;code>(Apple, founded_in, 1976)&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>✅ &lt;strong>Create Graph Nodes &amp;amp; Edges&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Nodes&lt;/strong> = extracted &lt;strong>entities (noun phrases)&lt;/strong> (e.g., &lt;em>Steve Jobs, Apple&lt;/em>).&lt;/li>
+&lt;li>&lt;strong>Edges&lt;/strong> = relationships between entities (e.g., &lt;em>co-founded&lt;/em>).&lt;/li>
+&lt;/ul>
+&lt;p>✅ &lt;strong>Synonymy Linking (Parahippocampal Processing)&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Uses &lt;strong>retrieval encoders&lt;/strong> (e.g., &lt;strong>Contriever, ColBERTv2&lt;/strong>) to &lt;strong>identify similar entities&lt;/strong> (e.g., &amp;ldquo;USA&amp;rdquo; = &amp;ldquo;United States&amp;rdquo;).&lt;/li>
+&lt;li>Creates &lt;strong>extra edges&lt;/strong> to connect synonyms, improving retrieval robustness.&lt;/li>
+&lt;/ul>
+&lt;p>✅ &lt;strong>Store the Graph&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>The final &lt;strong>knowledge graph&lt;/strong> consists of:
+&lt;ul>
+&lt;li>&lt;strong>Nodes (Entities)&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>Edges (Relations &amp;amp; Synonyms)&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>Passage Mapping&lt;/strong> (Each node is linked to the original text passage for retrieval)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="2-online-retrieval-querying-the-graph">&lt;strong>2. Online Retrieval (Querying the Graph)&lt;/strong>
+&lt;/h3>&lt;p>This step mimics the &lt;strong>hippocampus retrieving memories&lt;/strong>.&lt;/p>
+&lt;p>✅ &lt;strong>Extract Query Named Entities&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>The LLM identifies &lt;strong>key entities&lt;/strong> in the query.&lt;/li>
+&lt;li>Example: &lt;em>&amp;ldquo;Which Stanford professor works on Alzheimer&amp;rsquo;s?&amp;rdquo;&lt;/em>
+&lt;ul>
+&lt;li>Query Entities: &lt;code>{Stanford, Alzheimer’s}&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>✅ &lt;strong>Find Related Nodes in the Knowledge Graph&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Uses &lt;strong>retrieval encoders&lt;/strong> to find &lt;strong>graph nodes most similar&lt;/strong> to the query entities.&lt;/li>
+&lt;li>Example: The query &lt;code>{Stanford, Alzheimer’s}&lt;/code> matches the node &lt;code>{Thomas Südhof}&lt;/code> in the KG.&lt;/li>
+&lt;/ul>
+&lt;p>✅ &lt;strong>Personalized PageRank (PPR) for Multi-Hop Retrieval&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Runs &lt;strong>Personalized PageRank (PPR)&lt;/strong> on the graph using query nodes as &lt;strong>starting points&lt;/strong>.&lt;/li>
+&lt;li>Spreads probability over &lt;strong>connected nodes&lt;/strong>, enabling &lt;strong>multi-hop reasoning&lt;/strong>.&lt;/li>
+&lt;li>Example:
+&lt;ul>
+&lt;li>&lt;code>{Stanford}&lt;/code> → &lt;code>{Thomas Südhof}&lt;/code>&lt;/li>
+&lt;li>&lt;code>{Alzheimer’s}&lt;/code> → &lt;code>{Thomas Südhof}&lt;/code>&lt;/li>
+&lt;li>&lt;strong>Final Retrieval:&lt;/strong> Thomas Südhof is a Stanford professor working on Alzheimer’s.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>✅ &lt;strong>Retrieve &amp;amp; Rank Passages&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>The &lt;strong>most relevant passages&lt;/strong> are selected based on PPR scores.&lt;/li>
+&lt;/ul>
+&lt;h3 id="how-hipporag-uses-pagerank-to-order-results">&lt;strong>How HippoRAG Uses PageRank to Order Results&lt;/strong>
+&lt;/h3>&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>Convert Text to a Graph&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Extract &lt;strong>entities&lt;/strong> (nodes) and &lt;strong>relationships&lt;/strong> (edges).&lt;/li>
+&lt;li>Example:&lt;/li>
+&lt;/ul>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 328 41"
+>
+&lt;g transform='translate(8,16)'>
+&lt;text text-anchor='middle' x='0' y='4' fill='currentColor' style='font-size:1em'>(&lt;/text>
+&lt;text text-anchor='middle' x='0' y='20' fill='currentColor' style='font-size:1em'>(&lt;/text>
+&lt;text text-anchor='middle' x='8' y='4' fill='currentColor' style='font-size:1em'>S&lt;/text>
+&lt;text text-anchor='middle' x='8' y='20' fill='currentColor' style='font-size:1em'>T&lt;/text>
+&lt;text text-anchor='middle' x='16' y='4' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='16' y='20' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='24' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='24' y='20' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='32' y='4' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='32' y='20' fill='currentColor' style='font-size:1em'>m&lt;/text>
+&lt;text text-anchor='middle' x='40' y='4' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='40' y='20' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='48' y='4' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='48' y='20' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='56' y='4' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='64' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='64' y='20' fill='currentColor' style='font-size:1em'>S&lt;/text>
+&lt;text text-anchor='middle' x='72' y='4' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='72' y='20' fill='currentColor' style='font-size:1em'>ü&lt;/text>
+&lt;text text-anchor='middle' x='80' y='20' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='88' y='4' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='88' y='20' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='96' y='4' fill='currentColor' style='font-size:1em'>m&lt;/text>
+&lt;text text-anchor='middle' x='96' y='20' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='104' y='4' fill='currentColor' style='font-size:1em'>p&lt;/text>
+&lt;text text-anchor='middle' x='104' y='20' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='112' y='4' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='112' y='20' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='120' y='4' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='128' y='4' fill='currentColor' style='font-size:1em'>y&lt;/text>
+&lt;text text-anchor='middle' x='128' y='20' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='136' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='136' y='20' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='144' y='4' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='144' y='20' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='152' y='20' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='160' y='4' fill='currentColor' style='font-size:1em'>T&lt;/text>
+&lt;text text-anchor='middle' x='160' y='20' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='168' y='4' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='168' y='20' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='176' y='4' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='176' y='20' fill='currentColor' style='font-size:1em'>c&lt;/text>
+&lt;text text-anchor='middle' x='184' y='4' fill='currentColor' style='font-size:1em'>m&lt;/text>
+&lt;text text-anchor='middle' x='184' y='20' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='192' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='192' y='20' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='200' y='4' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='200' y='20' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='208' y='20' fill='currentColor' style='font-size:1em'>,&lt;/text>
+&lt;text text-anchor='middle' x='216' y='4' fill='currentColor' style='font-size:1em'>S&lt;/text>
+&lt;text text-anchor='middle' x='224' y='4' fill='currentColor' style='font-size:1em'>ü&lt;/text>
+&lt;text text-anchor='middle' x='224' y='20' fill='currentColor' style='font-size:1em'>A&lt;/text>
+&lt;text text-anchor='middle' x='232' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='232' y='20' fill='currentColor' style='font-size:1em'>l&lt;/text>
+&lt;text text-anchor='middle' x='240' y='4' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='240' y='20' fill='currentColor' style='font-size:1em'>z&lt;/text>
+&lt;text text-anchor='middle' x='248' y='4' fill='currentColor' style='font-size:1em'>o&lt;/text>
+&lt;text text-anchor='middle' x='248' y='20' fill='currentColor' style='font-size:1em'>h&lt;/text>
+&lt;text text-anchor='middle' x='256' y='4' fill='currentColor' style='font-size:1em'>f&lt;/text>
+&lt;text text-anchor='middle' x='256' y='20' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='264' y='4' fill='currentColor' style='font-size:1em'>)&lt;/text>
+&lt;text text-anchor='middle' x='264' y='20' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='272' y='20' fill='currentColor' style='font-size:1em'>m&lt;/text>
+&lt;text text-anchor='middle' x='280' y='20' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='288' y='20' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='296' y='20' fill='currentColor' style='font-size:1em'>’&lt;/text>
+&lt;text text-anchor='middle' x='304' y='20' fill='currentColor' style='font-size:1em'>s&lt;/text>
+&lt;text text-anchor='middle' x='312' y='20' fill='currentColor' style='font-size:1em'>)&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Find Relevant Nodes&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>If the query is: &lt;em>&amp;ldquo;Which Stanford professor studies Alzheimer&amp;rsquo;s?&amp;rdquo;&lt;/em>&lt;/li>
+&lt;li>The query &lt;strong>matches&lt;/strong> &lt;code>{Stanford, Alzheimer’s}&lt;/code> in the graph.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Run Personalized PageRank (PPR)&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Give high starting scores to query nodes&lt;/strong> (&lt;code>Stanford&lt;/code> and &lt;code>Alzheimer’s&lt;/code>).&lt;/li>
+&lt;li>&lt;strong>Spread scores to connected nodes&lt;/strong> (e.g., &lt;code>Thomas Südhof&lt;/code> gets a high score).&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Rank Passages by PageRank Score&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Passages mentioning &lt;code>Thomas Südhof&lt;/code> get &lt;strong>top rank&lt;/strong>.&lt;/li>
+&lt;li>Less relevant passages rank &lt;strong>lower&lt;/strong>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="https://shrsv.github.io/p/about-hipporag/image.png"
+width="1143"
+height="377"
+srcset="https://shrsv.github.io/p/about-hipporag/image_hu_ac67359686b4da5f.png 480w, https://shrsv.github.io/p/about-hipporag/image_hu_4abe0d9cb4edbeb4.png 1024w"
+loading="lazy"
+alt="alt text"
+class="gallery-image"
+data-flex-grow="303"
+data-flex-basis="727px"
+>&lt;/p>
+&lt;h3 id="why-this-works">&lt;strong>Why This Works&lt;/strong>
+&lt;/h3>&lt;ul>
+&lt;li>&lt;strong>Finds indirect connections&lt;/strong> (multi-hop retrieval).&lt;/li>
+&lt;li>&lt;strong>Ranks based on real-world relevance&lt;/strong> rather than keyword matching.&lt;/li>
+&lt;li>&lt;strong>Fast, since it&amp;rsquo;s done in one step.&lt;/strong>&lt;/li>
+&lt;/ul></description></item><item><title>Rosenblatt's Perceptron (WIP)</title><link>https://shrsv.github.io/p/rosenblatts-perceptron-wip/</link><pubDate>Sun, 09 Mar 2025 23:41:21 +0530</pubDate><guid>https://shrsv.github.io/p/rosenblatts-perceptron-wip/</guid><description>&lt;p>In &lt;strong>Smithsonian National Museum of American History&lt;/strong> - the following device
+is visible:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/1.jpg"
+width="600"
+height="473"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/1_hu_1c6d17b0c660cde6.jpg 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/1_hu_57728828e9e4b4f3.jpg 1024w"
+loading="lazy"
+alt="rosenblatt perceptron in museum"
+class="gallery-image"
+data-flex-grow="126"
+data-flex-basis="304px"
+>&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/2.jpg"
+width="600"
+height="472"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/2_hu_e551eb67e49ece3.jpg 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/2_hu_9299fc94f7bdeb09.jpg 1024w"
+loading="lazy"
+alt="S (Stimuli), A (Association), R (Response)"
+class="gallery-image"
+data-flex-grow="127"
+data-flex-basis="305px"
+>&lt;/p>
+&lt;p>&lt;a class="link" href="https://americanhistory.si.edu/collections/object/nmah_334414" target="_blank" rel="noopener"
+>(src)&lt;/a>&lt;/p>
+&lt;p>The device is called the &lt;strong>Mark I Perceptron&lt;/strong>.&lt;/p>
+&lt;p>It was built in 1957.&lt;/p>
+&lt;p>The chief person behind construction of this device was &lt;a class="link" href="https://en.wikipedia.org/wiki/Frank_Rosenblatt" target="_blank" rel="noopener"
+>Frank Rosenblatt&lt;/a>&lt;/p>
+&lt;p>The device had 3 parts:&lt;/p>
+&lt;ol>
+&lt;li>Stimuli receptor monitor (S)&lt;/li>
+&lt;li>Association machinery (A)&lt;/li>
+&lt;li>Response mechanism (S)&lt;/li>
+&lt;/ol>
+&lt;p>This is almost a mechanical equivalent of what Minsky sort of talks
+about in his &lt;a class="link" href="http://aurellem.org/society-of-mind/som-5.3.html" target="_blank" rel="noopener"
+>&lt;em>Society of Mind&lt;/em>&lt;/a>:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/3.png"
+width="332"
+height="210"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/3_hu_4cc180999959f97.png 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/3_hu_bdc6114d334dcfc1.png 1024w"
+loading="lazy"
+alt="Minsky’s Description"
+class="gallery-image"
+data-flex-grow="158"
+data-flex-basis="379px"
+>&lt;/p>
+&lt;blockquote>
+&lt;p>This diagram depicts our sensory machinery as sending information to the brain, wherein it is projected on some inner mental movie screen. Then, inside that ghostly theater, a lurking Self observes the scene and then considers what to do. Finally, that Self may act — somehow reversing all those steps — to influence the real world by sending various signals back through yet another family of remote-control accessories.
+&amp;ndash; Marvin Minsky, The Society of Mind&lt;/p>&lt;/blockquote>
+&lt;p>And this is Rosenbaltt tweaking the perceptron:&lt;/p>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/4.jpg"
+width="497"
+height="617"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/4_hu_c2e0ce1842f5f865.jpg 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/4_hu_94959b77a8a153f0.jpg 1024w"
+loading="lazy"
+alt="Rosenbaltt Working with Perceptron"
+class="gallery-image"
+data-flex-grow="80"
+data-flex-basis="193px"
+>&lt;/p>
+&lt;p>You can see the &lt;a class="link" href="https://www.nytimes.com/1958/07/08/archives/new-navy-device-learns-by-doing-psychologist-shows-embryo-of.html" target="_blank" rel="noopener"
+>NYT&lt;/a> reporting that the navy claimed the device
+would eventually:&lt;/p>
+&lt;blockquote>
+&lt;p>the embryo of an electronic computer today that it expects will be able to walk, talk, see, write, reproduce itself and be conscious of its existence.&lt;/p>&lt;/blockquote>
+&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/6.png"
+width="402"
+height="552"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/6_hu_642ef1adb74d61e0.png 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/6_hu_fba8ef22cbae61f6.png 1024w"
+loading="lazy"
+alt="The Prediction"
+class="gallery-image"
+data-flex-grow="72"
+data-flex-basis="174px"
+>&lt;/p>
+&lt;p>All these things aside, we will try to cull some ideas from Rosenblatt&amp;rsquo;s original paper - accessible at &lt;a class="link" href="https://www.ling.upenn.edu/courses/cogs501/Rosenblatt1958.pdf" target="_blank" rel="noopener"
+>The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain&lt;/a>&lt;/p>
+&lt;h2 id="memory-is-the-foundation-for-higher-level-capabilities-but-what-is-it">Memory is the foundation for higher-level capabilities (but What is it?!)
+&lt;/h2>&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/memory.png"
+width="450"
+height="195"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/memory_hu_dfbdf1760e77712e.png 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/memory_hu_6fb59de241cac732.png 1024w"
+loading="lazy"
+alt="The role of memory"
+class="gallery-image"
+data-flex-grow="230"
+data-flex-basis="553px"
+>&lt;/p>
+&lt;h2 id="the-3-questions-and-rs-area-of-focus">The 3 Questions (And R&amp;rsquo;s Area of Focus)
+&lt;/h2>&lt;p>&lt;img src="https://shrsv.github.io/p/rosenblatts-perceptron-wip/focus.png"
+width="477"
+height="255"
+srcset="https://shrsv.github.io/p/rosenblatts-perceptron-wip/focus_hu_88f61c06e73b39ac.png 480w, https://shrsv.github.io/p/rosenblatts-perceptron-wip/focus_hu_d717b9b427741867.png 1024w"
+loading="lazy"
+alt="Focus Area"
+class="gallery-image"
+data-flex-grow="187"
+data-flex-basis="448px"
+>&lt;/p>
+&lt;h2 id="how-is-stimulus-represented-in-storage">How is Stimulus represented in Storage?
+&lt;/h2>&lt;p>R considers options on how storage may work - based on existing scholarship. The interesting scholarly decision happens right here - he picks the right architecture, the right bet so to speak.&lt;/p>
+&lt;h3 id="the-critical-insight-r-makes-a-bet-on-the-nature-of-memory">The Critical Insight: R Makes a Bet On the Nature of Memory
+&lt;/h3>&lt;p>Position A: Coded Representational Memory (Essentially - expecting an isolated storage of memory)&lt;/p>
+&lt;blockquote>
+&lt;p>The first suggests that storage of sensory information is in the form of coded representations or images, with some sort of one-to-one mapping between the sensory stimulus and the stored pattern. According to this hypothesis, if one understood the code or &amp;lsquo;wiring diagram&amp;rsquo; of the nervous system, one should, in principle, be able to discover exactly what an organism remembers by reconstructing the original sensory patterns from the &amp;lsquo;memory traces&amp;rsquo; which they have left, much as we might develop a photographic negative, or translate the pattern of electrical charges in the &amp;lsquo;memory&amp;rsquo; of a digital computer.&lt;/p>&lt;/blockquote>
+&lt;p>Position B: Connectionist Memory&lt;/p>
+&lt;blockquote>
+&lt;p>The alternative approach, which stems from the tradition of British empiricism, hazards the guess that the images of stimuli may never really be recorded at all, and that the central nervous system simply acts as an intricate switching network, where retention takes the form of new connections, or pathways, between centers of activity. In many of the more recent developments of this position (Hebb&amp;rsquo;s &amp;lsquo;cell assembly,&amp;rsquo; and Hull&amp;rsquo;s &amp;lsquo;cortical anticipatory goal response,&amp;rsquo; for example) the &amp;lsquo;responses&amp;rsquo; which are associated to stimuli may be entirely contained within the CNS itself. In this case, the response represents an &amp;lsquo;idea&amp;rsquo; rather than an action.&lt;/p>&lt;/blockquote>
+&lt;p>Essentially - the difference in position is about direct recording vs indirect &amp;ldquo;impressions&amp;rdquo;.&lt;/p>
+&lt;h3 id="rosenblatts-rationale-for-selecting-a-connectionist-model-over-coded-representation">Rosenblatt&amp;rsquo;s Rationale for Selecting a Connectionist Model (over Coded Representation)
+&lt;/h3>&lt;ul>
+&lt;li>&lt;strong>Biology:&lt;/strong> Coded representation is &lt;em>precise&lt;/em>, &lt;em>definite&lt;/em>, and &lt;strong>rigid&lt;/strong> &amp;ndash; almost machine-like. Rosenblatt appreciated that different organisms remember things differently - learning from the same source! These individual variations in storage encouraged him to reject coded representation&lt;/li>
+&lt;li>&lt;strong>Simplicity:&lt;/strong> Of the options available, the connectionist model is simpler and economical. So he favored such a model.&lt;/li>
+&lt;li>&lt;strong>Probabilistic Pattern Matching:&lt;/strong> Rosenblatt noticed that humans and other creatures can match and work with images in diferent configurations, lighting, etc. That means - we are able to generalize the detection of objects upto an extent, classify them, and so on. He expected a more flexible model, rather than a rigid model to be able to perform this sort of work.&lt;/li>
+&lt;li>&lt;strong>Recall is natural and direct in connectionist model:&lt;/strong> In the coded method - learning or retrieving information requires a special lookup process. In connectionist model, learning is merely response pathway, given a stimulus. A simpler model to get the same function.&lt;/li>
+&lt;li>&lt;strong>Stronger Mathematical Basis:&lt;/strong> R embraced probabilistic models over deterministic ones from earlier (such as McCulloh-Pitts). He demonstrates how a random configuration of connections is able to achieve recognition (or learning).&lt;/li>
+&lt;li>&lt;strong>Less Idealized, More biological model:&lt;/strong> He critiques earlier models - from McCulloh and Minsky - calling them too structured or algorithmic, whereas biological learning is &lt;strong>stochastic&lt;/strong>. Connectionism better aligns with real-world learning.&lt;/li>
+&lt;/ul>
+&lt;p>In short - R betted on &lt;strong>adaptive learning&lt;/strong> over &lt;strong>rigid storage&lt;/strong>.&lt;/p>
+&lt;p>&lt;em>R shows that learning and memory are not different things - the connectionist model as a simpler model - collapses storage and learning into one!&lt;/em>&lt;/p></description></item><item><title>A Friendly Step-by-Step Tutorial on the Vanishing Gradient Problem</title><link>https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/</link><pubDate>Sat, 01 Mar 2025 22:46:54 +0530</pubDate><guid>https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/</guid><description>&lt;hr>
+&lt;p>&lt;em>Hi there! I&amp;rsquo;m Shrijith Venkatrama, founder of Hexmos. Right now, I’m building &lt;a class="link" href="https://hexmos.com/liveapi" target="_blank" rel="noopener"
+>LiveAPI&lt;/a>, a tool that makes generating API docs from your code ridiculously easy.&lt;/em>&lt;/p>
+&lt;hr>
+&lt;p>In this hands-on tutorial, we’re going to explore the vanishing gradient problem in deep neural networks—a tricky issue that can slow down or even stop learning in early layers.&lt;/p>
+&lt;p>You can run the sample code in a Jupyter Notebook, see diagrams, and have those &amp;ldquo;aha!&amp;rdquo; moments as we go.&lt;/p>
+&lt;p>We’ll use Python with NumPy (and a touch of PyTorch later) to keep things clear and practical.&lt;/p>
+&lt;p>By the end, you’ll also see how the ReLU activation function can save the day!&lt;/p>
+&lt;p>Let’s dive in, step by step, with bite-sized code snippets and plenty of explanations then.&lt;/p>
+&lt;h2 id="setting-up-your-environment">Setting Up Your Environment
+&lt;/h2>&lt;p>First, let’s get our tools ready. We’ll use NumPy for calculations and Matplotlib for visualizations. Open a Jupyter Notebook and run this:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">numpy&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">np&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">matplotlib.pyplot&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">plt&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Now, let’s define the &lt;strong>sigmoid activation function&lt;/strong> and its derivative, since they’re central to understanding the vanishing gradient problem.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">sigmoid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">exp&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">sigmoid_derivative&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">sigmoid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">sigmoid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;strong>What’s Happening?&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>The sigmoid function squashes any input into a range between 0 and 1.&lt;/li>
+&lt;li>Its derivative (which we’ll use in backpropagation) is always small—its maximum value is 0.25. This tiny derivative is a big clue to why gradients vanish!&lt;/li>
+&lt;/ul>
+&lt;p>Let’s visualize sigmoid and its derivative to get a feel for them:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">x&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">linspace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">100&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">plot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">sigmoid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">label&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;Sigmoid&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">plot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">sigmoid_derivative&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">label&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;Derivative&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">legend&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Sigmoid and Its Derivative&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">xlabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Input&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ylabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Output&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">grid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">show&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/1.png"
+width="567"
+height="455"
+srcset="https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/1_hu_35656147a585a8f1.png 480w, https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/1_hu_a759326a9cc30e18.png 1024w"
+loading="lazy"
+alt="Sigmoid and Derivative"
+class="gallery-image"
+data-flex-grow="124"
+data-flex-basis="299px"
+>&lt;/p>
+&lt;p>&lt;strong>Aha Moment&lt;/strong>:&lt;/p>
+&lt;p>Notice how the derivative peaks at 0.25 and drops to near 0 for large positive or negative inputs. When we multiply these small values across layers, gradients can shrink fast.&lt;/p>
+&lt;h2 id="building-a-tiny-neural-network">Building a Tiny Neural Network
+&lt;/h2>&lt;p>Let’s create a simple network with:&lt;/p>
+&lt;ul>
+&lt;li>1 input neuron (value = 0.5)&lt;/li>
+&lt;li>2 hidden layers (1 neuron each)&lt;/li>
+&lt;li>1 output neuron (target = 0.8)&lt;/li>
+&lt;/ul>
+&lt;p>We’ll set all weights to 0.5 and biases to 0 for simplicity.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Input and target&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">input_data&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">([[&lt;/span>&lt;span class="mf">0.5&lt;/span>&lt;span class="p">]])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">target_output&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">([[&lt;/span>&lt;span class="mf">0.8&lt;/span>&lt;span class="p">]])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Weights and biases&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">weights1&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">([[&lt;/span>&lt;span class="mf">0.5&lt;/span>&lt;span class="p">]])&lt;/span> &lt;span class="c1"># Input to Hidden Layer 1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bias1&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">([[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">weights2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">([[&lt;/span>&lt;span class="mf">0.5&lt;/span>&lt;span class="p">]])&lt;/span> &lt;span class="c1"># Hidden Layer 1 to Hidden Layer 2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bias2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">([[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">weights3&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">([[&lt;/span>&lt;span class="mf">0.5&lt;/span>&lt;span class="p">]])&lt;/span> &lt;span class="c1"># Hidden Layer 2 to Output&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bias3&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">([[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]])&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/5.png"
+width="646"
+height="70"
+srcset="https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/5_hu_4897fdf706a4c381.png 480w, https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/5_hu_c820247fc86e721.png 1024w"
+loading="lazy"
+alt="layers"
+class="gallery-image"
+data-flex-grow="922"
+data-flex-basis="2214px"
+>&lt;/p>
+&lt;p>Each arrow has a weight of 0.5, and each neuron uses the sigmoid function&lt;/p>
+&lt;h2 id="forward-passmaking-a-prediction">Forward Pass—Making a Prediction
+&lt;/h2>&lt;p>Let’s compute the output step by step. Run each line and see how the signal flows:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Hidden Layer 1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">layer1_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">weights1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">input_data&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">bias1&lt;/span> &lt;span class="c1"># 0.5 * 0.5 + 0 = 0.25&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">layer1_output&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">sigmoid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layer1_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># ≈ 0.562&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Hidden Layer 2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">layer2_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">weights2&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">layer1_output&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">bias2&lt;/span> &lt;span class="c1"># 0.5 * 0.562 ≈ 0.281&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">layer2_output&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">sigmoid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layer2_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># ≈ 0.570&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Output Layer&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">output_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">weights3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">layer2_output&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">bias3&lt;/span> &lt;span class="c1"># 0.5 * 0.570 ≈ 0.285&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">output&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">sigmoid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">output_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># ≈ 0.571&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;Predicted Output: &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">output&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="si">:&lt;/span>&lt;span class="s2">.3f&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">, Target: &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">target_output&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;strong>Aha Moment&lt;/strong>:&lt;br>
+Our prediction (≈ 0.571) is way off the target (0.8). We need to adjust the weights, but that depends on gradients. Let’s see if they’re strong enough to help!&lt;/p>
+&lt;h2 id="compute-the-loss">Compute the Loss
+&lt;/h2>&lt;p>Let’s measure how bad our prediction is using mean squared error:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">loss&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mf">0.5&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">power&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">output&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">target_output&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;Loss: &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">loss&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="si">:&lt;/span>&lt;span class="s2">.3f&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Plot the loss:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">figure&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">figsize&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">4&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">plot&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">loss&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="s1">&amp;#39;ro&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Loss&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ylabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Loss Value&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">show&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/2.png"
+width="398"
+height="297"
+srcset="https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/2_hu_f60de9cd2513abb8.png 480w, https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/2_hu_a385227eaa473559.png 1024w"
+loading="lazy"
+alt="Loss"
+class="gallery-image"
+data-flex-grow="134"
+data-flex-basis="321px"
+>&lt;/p>
+&lt;p>&lt;strong>What’s Happening?&lt;/strong>&lt;/p>
+&lt;p>The loss (≈ 0.026) shows our error. Backpropagation will use gradients to reduce this, but let’s see if those gradients hold up.&lt;/p>
+&lt;h2 id="backward-pass---where-gradients-vanish">Backward Pass - Where Gradients Vanish
+&lt;/h2>&lt;p>Now, we’ll calculate gradients starting from the output and moving backward. This is where the vanishing gradient problem shows up!&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Output Layer Gradients&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">d_loss_d_output&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">output&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">target_output&lt;/span> &lt;span class="c1"># ≈ -0.229&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">d_loss_d_output_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">d_loss_d_output&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">sigmoid_derivative&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">output_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># ≈ -0.056&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">gradient_weights3&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">d_loss_d_output_input&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">layer2_output&lt;/span> &lt;span class="c1"># ≈ -0.032&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Hidden Layer 2 Gradients&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">error_layer2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">weights3&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d_loss_d_output_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># ≈ -0.028&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">d_loss_d_layer2_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">error_layer2&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">sigmoid_derivative&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layer2_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># ≈ -0.007&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">gradient_weights2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">d_loss_d_layer2_input&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">layer1_output&lt;/span> &lt;span class="c1"># ≈ -0.004&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Hideen Layer 1 Gradients&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">error_layer1&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">weights2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d_loss_d_layer2_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># ≈ -0.0035&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">d_loss_d_layer1_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">error_layer1&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">sigmoid_derivative&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layer1_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># ≈ -0.00085&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">gradient_weights1&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">d_loss_d_layer1_input&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">input_data&lt;/span> &lt;span class="c1"># ≈ -0.000425&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;strong>Aha Moment&lt;/strong>:&lt;br>
+Look at the gradient sizes:&lt;/p>
+&lt;ul>
+&lt;li>Output layer: ≈ -0.032&lt;/li>
+&lt;li>Hidden Layer 2: ≈ -0.004&lt;/li>
+&lt;li>Hidden Layer 1: ≈ -0.000425&lt;/li>
+&lt;/ul>
+&lt;p>They’re shrinking fast! Let’s plot them:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">gradients&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="nb">abs&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">gradient_weights1&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]),&lt;/span> &lt;span class="nb">abs&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">gradient_weights2&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]),&lt;/span> &lt;span class="nb">abs&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">gradient_weights3&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">])]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">layers&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Layer 1&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Layer 2&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Layer 3&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bar&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layers&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">gradients&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Gradient Magnitudes with Sigmoid&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ylabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Magnitude&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">show&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/3.png"
+width="584"
+height="435"
+srcset="https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/3_hu_17897e57a52e97f3.png 480w, https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/3_hu_a33f28e19034f0f9.png 1024w"
+loading="lazy"
+alt="Gradient Magnitudes"
+class="gallery-image"
+data-flex-grow="134"
+data-flex-basis="322px"
+>&lt;/p>
+&lt;p>&lt;strong>Insight&lt;/strong>:&lt;br>
+The deeper we go (toward Layer 1), the tinier the gradients get. This is the vanishing gradient problem—early layers barely learn because their updates are so small!&lt;/p>
+&lt;h2 id="why-do-gradients-vanish">Why Do Gradients Vanish?
+&lt;/h2>&lt;p>Here’s the key: each gradient is multiplied by the sigmoid derivative (max 0.25). Across layers, it’s like:&lt;/p>
+&lt;ul>
+&lt;li>Layer 3: gradient&lt;/li>
+&lt;li>Layer 2: gradient × &amp;lt;0.25&lt;/li>
+&lt;li>Layer 1: gradient × &amp;lt;0.25 × &amp;lt;0.25&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Intuition&lt;/strong>:&lt;br>
+Imagine passing a message through a chain of people, each whispering quieter. By the time it reaches the start, it’s almost silent. That’s what’s happening to our gradients!&lt;/p>
+&lt;h2 id="how-relu-solves-the-vanishing-gradient-problem">How ReLU Solves the Vanishing Gradient Problem
+&lt;/h2>&lt;p>Let’s switch to &lt;strong>ReLU&lt;/strong> (Rectified Linear Unit), defined as:&lt;/p>
+$$ReLU(x) = max⁡(0,x)$$&lt;p>with a derivative of 1 for $x&amp;gt;0$. This doesn’t shrink gradients! Let’s define it:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">relu&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">maximum&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">relu_derivative&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">where&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="relu-forward-pass">ReLU Forward Pass
+&lt;/h3>&lt;p>Redo the forward pass with ReLU:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">layer1_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">weights1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">input_data&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">bias1&lt;/span> &lt;span class="c1"># 0.25&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">layer1_output&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">relu&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layer1_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># 0.25 (since 0.25 &amp;gt; 0)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">layer2_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">weights2&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">layer1_output&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">bias2&lt;/span> &lt;span class="c1"># 0.5 * 0.25 = 0.125&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">layer2_output&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">relu&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layer2_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># 0.125&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">output_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">weights3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">layer2_output&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">bias3&lt;/span> &lt;span class="c1"># 0.5 * 0.125 = 0.0625&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">output&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">relu&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">output_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># 0.0625&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;ReLU Output: &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">output&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="si">:&lt;/span>&lt;span class="s2">.4f&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;strong>Note&lt;/strong>:&lt;br>
+For simplicity, we used ReLU everywhere. In practice, the output layer might be linear for regression, but this shows the idea.&lt;/p>
+&lt;h3 id="relu-backward-pass">ReLU Backward Pass
+&lt;/h3>&lt;p>Now, compute gradients:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">d_loss_d_output&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">output&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">target_output&lt;/span> &lt;span class="c1"># 0.0625 - 0.8 ≈ -0.7375&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">d_loss_d_output_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">d_loss_d_output&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">relu_derivative&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">output_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># -0.7375 * 1 = -0.7375&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">gradient_weights3&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">d_loss_d_output_input&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">layer2_output&lt;/span> &lt;span class="c1"># ≈ -0.0922&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">error_layer2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">weights3&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d_loss_d_output_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># ≈ -0.36875&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">d_loss_d_layer2_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">error_layer2&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">relu_derivative&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layer2_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># ≈ -0.36875&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">gradient_weights2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">d_loss_d_layer2_input&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">layer1_output&lt;/span> &lt;span class="c1"># ≈ -0.0922&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">error_layer1&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">weights2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d_loss_d_layer2_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># ≈ -0.184375&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">d_loss_d_layer1_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">error_layer1&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">relu_derivative&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layer1_input&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># ≈ -0.184375&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">gradient_weights1&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">d_loss_d_layer1_input&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">input_data&lt;/span> &lt;span class="c1"># ≈ -0.0922&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;strong>Aha Moment&lt;/strong>:&lt;br>
+Check the gradients:&lt;/p>
+&lt;ul>
+&lt;li>Layer 3: ≈ -0.0922&lt;/li>
+&lt;li>Layer 2: ≈ -0.0922&lt;/li>
+&lt;li>Layer 1: ≈ -0.0922&lt;/li>
+&lt;/ul>
+&lt;p>They’re all the same size! Plot them:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">gradients_relu&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="nb">abs&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">gradient_weights1&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]),&lt;/span> &lt;span class="nb">abs&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">gradient_weights2&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]),&lt;/span> &lt;span class="nb">abs&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">gradient_weights3&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">])]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bar&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">layers&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">gradients_relu&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Gradient Magnitudes with ReLU&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ylabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Magnitude&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">show&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/4.png"
+width="576"
+height="435"
+srcset="https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/4_hu_eb517843162895e2.png 480w, https://shrsv.github.io/p/a-friendly-step-by-step-tutorial-on-the-vanishing-gradient-problem/4_hu_831baee1c8c2e440.png 1024w"
+loading="lazy"
+alt="ReLU Gradient Magnitudes"
+class="gallery-image"
+data-flex-grow="132"
+data-flex-basis="317px"
+>&lt;/p>
+&lt;p>&lt;strong>Insight&lt;/strong>:&lt;br>
+ReLU’s derivative of 1 (for positive inputs) keeps gradients strong, so early layers can learn just as well as later ones. No vanishing here!&lt;/p>
+&lt;h2 id="bonus-trying-it-with-pytorch">Bonus: Trying it With PyTorch
+&lt;/h2>&lt;p>Let’s quickly see this with PyTorch for a modern twist. Install PyTorch if you haven’t (pip install torch), then run:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">torch&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Define inputs and weights as tensors with gradients&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">x&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">torch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tensor&lt;/span>&lt;span class="p">([[&lt;/span>&lt;span class="mf">0.5&lt;/span>&lt;span class="p">]],&lt;/span> &lt;span class="n">requires_grad&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">False&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">target&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">torch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tensor&lt;/span>&lt;span class="p">([[&lt;/span>&lt;span class="mf">0.8&lt;/span>&lt;span class="p">]])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">w1&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">torch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tensor&lt;/span>&lt;span class="p">([[&lt;/span>&lt;span class="mf">0.5&lt;/span>&lt;span class="p">]],&lt;/span> &lt;span class="n">requires_grad&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">w2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">torch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tensor&lt;/span>&lt;span class="p">([[&lt;/span>&lt;span class="mf">0.5&lt;/span>&lt;span class="p">]],&lt;/span> &lt;span class="n">requires_grad&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">w3&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">torch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tensor&lt;/span>&lt;span class="p">([[&lt;/span>&lt;span class="mf">0.5&lt;/span>&lt;span class="p">]],&lt;/span> &lt;span class="n">requires_grad&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Forward pass with sigmoid&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">h1&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">torch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sigmoid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">w1&lt;/span> &lt;span class="o">@&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">h2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">torch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sigmoid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">w2&lt;/span> &lt;span class="o">@&lt;/span> &lt;span class="n">h1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">out&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">torch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sigmoid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">w3&lt;/span> &lt;span class="o">@&lt;/span> &lt;span class="n">h2&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Loss&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">loss&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mf">0.5&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">out&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">target&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">**&lt;/span> &lt;span class="mi">2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">loss&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">backward&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Print gradients&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;Gradient w1: &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">w1&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">grad&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="si">:&lt;/span>&lt;span class="s2">.6f&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;Gradient w2: &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">w2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">grad&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="si">:&lt;/span>&lt;span class="s2">.6f&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;Gradient w3: &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">w3&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">grad&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="si">:&lt;/span>&lt;span class="s2">.6f&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;strong>Output&lt;/strong>:&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 184 57"
+>
+&lt;g transform='translate(8,16)'>
+&lt;text text-anchor='middle' x='0' y='4' fill='currentColor' style='font-size:1em'>G&lt;/text>
+&lt;text text-anchor='middle' x='0' y='20' fill='currentColor' style='font-size:1em'>G&lt;/text>
+&lt;text text-anchor='middle' x='0' y='36' fill='currentColor' style='font-size:1em'>G&lt;/text>
+&lt;text text-anchor='middle' x='8' y='4' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='8' y='20' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='8' y='36' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='16' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='16' y='20' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='16' y='36' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='24' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='24' y='20' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='24' y='36' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='32' y='4' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='32' y='20' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='32' y='36' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='40' y='4' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='40' y='20' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='40' y='36' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='48' y='4' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='48' y='20' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='48' y='36' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='56' y='4' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='56' y='20' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='56' y='36' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='72' y='4' fill='currentColor' style='font-size:1em'>w&lt;/text>
+&lt;text text-anchor='middle' x='72' y='20' fill='currentColor' style='font-size:1em'>w&lt;/text>
+&lt;text text-anchor='middle' x='72' y='36' fill='currentColor' style='font-size:1em'>w&lt;/text>
+&lt;text text-anchor='middle' x='80' y='4' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='80' y='20' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='80' y='36' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='88' y='4' fill='currentColor' style='font-size:1em'>:&lt;/text>
+&lt;text text-anchor='middle' x='88' y='20' fill='currentColor' style='font-size:1em'>:&lt;/text>
+&lt;text text-anchor='middle' x='88' y='36' fill='currentColor' style='font-size:1em'>:&lt;/text>
+&lt;text text-anchor='middle' x='104' y='4' fill='currentColor' style='font-size:1em'>-&lt;/text>
+&lt;text text-anchor='middle' x='104' y='20' fill='currentColor' style='font-size:1em'>-&lt;/text>
+&lt;text text-anchor='middle' x='104' y='36' fill='currentColor' style='font-size:1em'>-&lt;/text>
+&lt;text text-anchor='middle' x='112' y='4' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='112' y='20' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='112' y='36' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='120' y='4' fill='currentColor' style='font-size:1em'>.&lt;/text>
+&lt;text text-anchor='middle' x='120' y='20' fill='currentColor' style='font-size:1em'>.&lt;/text>
+&lt;text text-anchor='middle' x='120' y='36' fill='currentColor' style='font-size:1em'>.&lt;/text>
+&lt;text text-anchor='middle' x='128' y='4' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='128' y='20' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='128' y='36' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='136' y='4' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='136' y='20' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='136' y='36' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='144' y='4' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='144' y='20' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='144' y='36' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='152' y='4' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='152' y='20' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='152' y='36' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='160' y='4' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='160' y='20' fill='currentColor' style='font-size:1em'>7&lt;/text>
+&lt;text text-anchor='middle' x='160' y='36' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='168' y='4' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;text text-anchor='middle' x='168' y='20' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='168' y='36' fill='currentColor' style='font-size:1em'>4&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;p>You’ll see gradients shrinking from w3 to w1, just like before. Now try ReLU:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Reset gradients&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">w1&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">grad&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">None&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">w2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">grad&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">None&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">w3&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">grad&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">None&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Forward pass with ReLU&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">h1&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">torch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">relu&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">w1&lt;/span> &lt;span class="o">@&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">h2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">torch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">relu&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">w2&lt;/span> &lt;span class="o">@&lt;/span> &lt;span class="n">h1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">out&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">torch&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">relu&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">w3&lt;/span> &lt;span class="o">@&lt;/span> &lt;span class="n">h2&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Loss and backward&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">loss&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mf">0.5&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">out&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">target&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">**&lt;/span> &lt;span class="mi">2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">loss&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">backward&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;ReLU Gradient w1: &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">w1&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">grad&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="si">:&lt;/span>&lt;span class="s2">.6f&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;ReLU Gradient w2: &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">w2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">grad&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="si">:&lt;/span>&lt;span class="s2">.6f&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;ReLU Gradient w3: &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">w3&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">grad&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="si">:&lt;/span>&lt;span class="s2">.6f&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Output:&lt;/p>
+&lt;div class="goat svg-container ">
+&lt;svg
+xmlns="http://www.w3.org/2000/svg"
+font-family="Menlo,Lucida Console,monospace"
+viewBox="0 0 224 57"
+>
+&lt;g transform='translate(8,16)'>
+&lt;text text-anchor='middle' x='0' y='4' fill='currentColor' style='font-size:1em'>R&lt;/text>
+&lt;text text-anchor='middle' x='0' y='20' fill='currentColor' style='font-size:1em'>R&lt;/text>
+&lt;text text-anchor='middle' x='0' y='36' fill='currentColor' style='font-size:1em'>R&lt;/text>
+&lt;text text-anchor='middle' x='8' y='4' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='8' y='20' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='8' y='36' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='16' y='4' fill='currentColor' style='font-size:1em'>L&lt;/text>
+&lt;text text-anchor='middle' x='16' y='20' fill='currentColor' style='font-size:1em'>L&lt;/text>
+&lt;text text-anchor='middle' x='16' y='36' fill='currentColor' style='font-size:1em'>L&lt;/text>
+&lt;text text-anchor='middle' x='24' y='4' fill='currentColor' style='font-size:1em'>U&lt;/text>
+&lt;text text-anchor='middle' x='24' y='20' fill='currentColor' style='font-size:1em'>U&lt;/text>
+&lt;text text-anchor='middle' x='24' y='36' fill='currentColor' style='font-size:1em'>U&lt;/text>
+&lt;text text-anchor='middle' x='40' y='4' fill='currentColor' style='font-size:1em'>G&lt;/text>
+&lt;text text-anchor='middle' x='40' y='20' fill='currentColor' style='font-size:1em'>G&lt;/text>
+&lt;text text-anchor='middle' x='40' y='36' fill='currentColor' style='font-size:1em'>G&lt;/text>
+&lt;text text-anchor='middle' x='48' y='4' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='48' y='20' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='48' y='36' fill='currentColor' style='font-size:1em'>r&lt;/text>
+&lt;text text-anchor='middle' x='56' y='4' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='56' y='20' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='56' y='36' fill='currentColor' style='font-size:1em'>a&lt;/text>
+&lt;text text-anchor='middle' x='64' y='4' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='64' y='20' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='64' y='36' fill='currentColor' style='font-size:1em'>d&lt;/text>
+&lt;text text-anchor='middle' x='72' y='4' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='72' y='20' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='72' y='36' fill='currentColor' style='font-size:1em'>i&lt;/text>
+&lt;text text-anchor='middle' x='80' y='4' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='80' y='20' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='80' y='36' fill='currentColor' style='font-size:1em'>e&lt;/text>
+&lt;text text-anchor='middle' x='88' y='4' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='88' y='20' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='88' y='36' fill='currentColor' style='font-size:1em'>n&lt;/text>
+&lt;text text-anchor='middle' x='96' y='4' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='96' y='20' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='96' y='36' fill='currentColor' style='font-size:1em'>t&lt;/text>
+&lt;text text-anchor='middle' x='112' y='4' fill='currentColor' style='font-size:1em'>w&lt;/text>
+&lt;text text-anchor='middle' x='112' y='20' fill='currentColor' style='font-size:1em'>w&lt;/text>
+&lt;text text-anchor='middle' x='112' y='36' fill='currentColor' style='font-size:1em'>w&lt;/text>
+&lt;text text-anchor='middle' x='120' y='4' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='120' y='20' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='120' y='36' fill='currentColor' style='font-size:1em'>3&lt;/text>
+&lt;text text-anchor='middle' x='128' y='4' fill='currentColor' style='font-size:1em'>:&lt;/text>
+&lt;text text-anchor='middle' x='128' y='20' fill='currentColor' style='font-size:1em'>:&lt;/text>
+&lt;text text-anchor='middle' x='128' y='36' fill='currentColor' style='font-size:1em'>:&lt;/text>
+&lt;text text-anchor='middle' x='144' y='4' fill='currentColor' style='font-size:1em'>-&lt;/text>
+&lt;text text-anchor='middle' x='144' y='20' fill='currentColor' style='font-size:1em'>-&lt;/text>
+&lt;text text-anchor='middle' x='144' y='36' fill='currentColor' style='font-size:1em'>-&lt;/text>
+&lt;text text-anchor='middle' x='152' y='4' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='152' y='20' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='152' y='36' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='160' y='4' fill='currentColor' style='font-size:1em'>.&lt;/text>
+&lt;text text-anchor='middle' x='160' y='20' fill='currentColor' style='font-size:1em'>.&lt;/text>
+&lt;text text-anchor='middle' x='160' y='36' fill='currentColor' style='font-size:1em'>.&lt;/text>
+&lt;text text-anchor='middle' x='168' y='4' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='168' y='20' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='168' y='36' fill='currentColor' style='font-size:1em'>0&lt;/text>
+&lt;text text-anchor='middle' x='176' y='4' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='176' y='20' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='176' y='36' fill='currentColor' style='font-size:1em'>9&lt;/text>
+&lt;text text-anchor='middle' x='184' y='4' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='184' y='20' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='184' y='36' fill='currentColor' style='font-size:1em'>2&lt;/text>
+&lt;text text-anchor='middle' x='192' y='4' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='192' y='20' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='192' y='36' fill='currentColor' style='font-size:1em'>1&lt;/text>
+&lt;text text-anchor='middle' x='200' y='4' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='200' y='20' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='200' y='36' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='208' y='4' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='208' y='20' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;text text-anchor='middle' x='208' y='36' fill='currentColor' style='font-size:1em'>8&lt;/text>
+&lt;/g>
+&lt;/svg>
+&lt;/div>
+&lt;p>&lt;strong>Aha Moment&lt;/strong>:&lt;br>
+PyTorch confirms it—ReLU keeps gradients steady, while sigmoid lets them vanish.&lt;/p>
+&lt;h2 id="conclusion">Conclusion
+&lt;/h2>&lt;p>You’ve just walked through the vanishing gradient problem.&lt;/p>
+&lt;p>With sigmoid, gradients shrink exponentially in deeper layers, slowing learning.&lt;/p>
+&lt;p>ReLU fixes this by keeping gradients robust.&lt;/p>
+&lt;p>Try tweaking the network—add layers or change weights—and watch how gradients behave.&lt;/p>
+&lt;p>You’ve got the tools and intuition now—happy experimenting!&lt;/p></description></item><item><title>Making A Simple Image With Tensors (Starting from Scratch)</title><link>https://shrsv.github.io/p/tensors-challenge/</link><pubDate>Fri, 28 Feb 2025 23:11:51 +0530</pubDate><guid>https://shrsv.github.io/p/tensors-challenge/</guid><description>&lt;hr>
+&lt;p>&lt;em>Hi there! I&amp;rsquo;m Shrijith Venkatrama, founder of Hexmos. Right now, I’m building &lt;a class="link" href="https://hexmos.com/liveapi" target="_blank" rel="noopener"
+>LiveAPI&lt;/a>, a tool that makes generating API docs from your code ridiculously easy.&lt;/em>&lt;/p>
+&lt;hr>
+&lt;p>&lt;strong>Tensors&lt;/strong> are a fundamental concept in machine learning and deep learning.&lt;/p>
+&lt;p>In this tutorial, we will explore tensors in a fun and light-hearted way to gain some familiarity&lt;/p>
+&lt;h2 id="what--is-a-tensor">What is a Tensor?
+&lt;/h2>&lt;p>A tensor is a multi-dimensional array that generalizes familiar concepts:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Scalar:&lt;/strong> A single number (0D tensor).&lt;/li>
+&lt;li>&lt;strong>Vector:&lt;/strong> A list of numbers (1D tensor).&lt;/li>
+&lt;li>&lt;strong>Matrix:&lt;/strong> A grid of numbers (2D tensor).&lt;/li>
+&lt;li>&lt;strong>Higher-dimensional tensors:&lt;/strong> Structures with 3 or more dimensions (e.g., 3D, 4D).&lt;/li>
+&lt;/ul>
+&lt;p>Think of tensors as containers for organizing data in multiple dimensions, like stacking grids or cubes.&lt;/p>
+&lt;h2 id="the-challenge-draw-a-red-0-on-grey-background-using-tensors">The Challenge: Draw a Red &amp;ldquo;0&amp;rdquo; on Grey Background using Tensors
+&lt;/h2>&lt;p>To start with, we are going to set a fairly simple goal.&lt;/p>
+&lt;p>We will learn a bit about tensors and then try to draw a red &amp;ldquo;0&amp;rdquo; on a grey background using the new knowledge we acquire.&lt;/p>
+&lt;p>For our goal:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Grayscale&lt;/strong> = 2D tensor (intensity values).&lt;/li>
+&lt;li>&lt;strong>Color (red &amp;ldquo;0&amp;rdquo;)&lt;/strong> = 3D tensor (RGB).&lt;/li>
+&lt;/ul>
+&lt;h2 id="scalars---single-pixels">Scalars - Single Pixels
+&lt;/h2>&lt;p>A scalar is one number, like a pixel’s intensity.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">scalar&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">128&lt;/span> &lt;span class="c1"># Medium gray&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Scalar (Pixel Intensity):&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">scalar&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ul>
+&lt;li>128 is medium gray (0 = black, 255 = white).&lt;/li>
+&lt;li>This is a 0D tensor, the simplest building block.&lt;/li>
+&lt;/ul>
+&lt;h2 id="vectors---rows-of-pixels">Vectors - Rows of Pixels
+&lt;/h2>&lt;p>A vector (1D tensor) is a sequence of numbers, like a row of pixels.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">vector&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">64&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">128&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">192&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Vector (Row of Pixels):&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">vector&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">matplotlib.pyplot&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">plt&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">plot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">vector&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">vector&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="s1">&amp;#39;ro&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Vector: Row of Pixel Intensities&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">xlabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Pixel Intensity (0 = Black, 255 = White)&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ylabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Position in Row&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">grid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">show&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://shrsv.github.io/p/tensors-challenge/1.png"
+width="587"
+height="455"
+srcset="https://shrsv.github.io/p/tensors-challenge/1_hu_dbd4f0b078d4fa15.png 480w, https://shrsv.github.io/p/tensors-challenge/1_hu_f0c3b94f7566a06d.png 1024w"
+loading="lazy"
+alt="red dots"
+class="gallery-image"
+data-flex-grow="129"
+data-flex-basis="309px"
+>&lt;/p>
+&lt;p>In this image - you can see the pixel intensity going from 0 to 255.&lt;/p>
+&lt;p>0 means - black, and 255 means white, and anything in between is a shade of grey.&lt;/p>
+&lt;h2 id="matrices---grayscale-images">Matrices - Grayscale Images
+&lt;/h2>&lt;p>A matrix (2D tensor) is a grid of numbers, like a grayscale image.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">matrix&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">64&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mi">128&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">192&lt;/span>&lt;span class="p">]]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Matrix (Grayscale Image):&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">matrix&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">imshow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">matrix&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cmap&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;gray&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;2x2 Grayscale Image&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">xlabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Column&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ylabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Row&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">colorbar&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">label&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;Intensity (0 = Black, 255 = White)&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">show&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://shrsv.github.io/p/tensors-challenge/2.png"
+width="560"
+height="455"
+srcset="https://shrsv.github.io/p/tensors-challenge/2_hu_a397f5537369bde3.png 480w, https://shrsv.github.io/p/tensors-challenge/2_hu_53b2d0937e43fa49.png 1024w"
+loading="lazy"
+alt="grayscale matrix"
+class="gallery-image"
+data-flex-grow="123"
+data-flex-basis="295px"
+>&lt;/p>
+&lt;ul>
+&lt;li>Each cell in this matrix represents a pixel&amp;rsquo;s intensity.&lt;/li>
+&lt;li>The colorbar shows the intensity values.&lt;/li>
+&lt;/ul>
+&lt;h2 id="3d-tensors---adding-color">3D Tensors - Adding Color
+&lt;/h2>&lt;p>A 3D tensor has three 2D matrices for RGB channels.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">red_channel&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[[&lt;/span>&lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">]]&lt;/span> &lt;span class="c1"># Red in top-left&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">green_channel&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">]]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">blue_channel&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">]]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">color_image&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">red_channel&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">green_channel&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">blue_channel&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Color Image (RGB Channels):&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">color_image&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">fig&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">axs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">subplots&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">figsize&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">channel&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">color&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">enumerate&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">zip&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">color_image&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Red&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Green&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Blue&amp;#39;&lt;/span>&lt;span class="p">])):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">axs&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">imshow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">channel&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cmap&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;gray&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">axs&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set_title&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">color&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2"> Channel&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">axs&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set_xlabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Column&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">axs&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set_ylabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Row&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tight_layout&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">show&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://shrsv.github.io/p/tensors-challenge/3.png"
+width="957"
+height="293"
+srcset="https://shrsv.github.io/p/tensors-challenge/3_hu_a02b15875b9b74b9.png 480w, https://shrsv.github.io/p/tensors-challenge/3_hu_85f0929c29bcff7a.png 1024w"
+loading="lazy"
+alt="3d tensor"
+class="gallery-image"
+data-flex-grow="326"
+data-flex-basis="783px"
+>&lt;/p>
+&lt;p>Visualization:&lt;/p>
+&lt;ul>
+&lt;li>Three subplots: RGB channels.&lt;/li>
+&lt;li>Red Channel: 255 at top-left (white); others 0 (black).&lt;/li>
+&lt;li>Green/Blue: All 0.&lt;/li>
+&lt;/ul>
+&lt;p>Explanation:&lt;/p>
+&lt;ul>
+&lt;li>3x2x2 tensor where only red is active.&lt;/li>
+&lt;/ul>
+&lt;h2 id="combining-channels">Combining Channels
+&lt;/h2>&lt;p>Combine RGB channels into a color image.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">numpy&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">np&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">color_image_array&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">stack&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">color_image&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">axis&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">imshow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">color_image_array&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Combined 2x2 Color Image&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">xlabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Column&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ylabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Row&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">show&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://shrsv.github.io/p/tensors-challenge/4.png"
+width="476"
+height="455"
+srcset="https://shrsv.github.io/p/tensors-challenge/4_hu_f35e6260a9b17607.png 480w, https://shrsv.github.io/p/tensors-challenge/4_hu_a40720e29cc9645a.png 1024w"
+loading="lazy"
+alt="combined channels"
+class="gallery-image"
+data-flex-grow="104"
+data-flex-basis="251px"
+>&lt;/p>
+&lt;p>Visualization:&lt;/p>
+&lt;ul>
+&lt;li>Image: Red top-left, black elsewhere.&lt;/li>
+&lt;li>Axes: 2x2 grid.&lt;/li>
+&lt;/ul>
+&lt;p>Explanation:&lt;/p>
+&lt;ul>
+&lt;li>RGB = (255, 0, 0) is red; (0, 0, 0) is black&lt;/li>
+&lt;/ul>
+&lt;h2 id="grayscale-background">Grayscale Background
+&lt;/h2>&lt;p>Create a 5x5 grayscale background.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">background&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[[&lt;/span>&lt;span class="mi">128&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">_&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">)]&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">_&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Grayscale Background:&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">background&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">imshow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">background&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cmap&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;gray&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;5x5 Grayscale Background&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">xlabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Column&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ylabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Row&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">colorbar&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">label&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;Intensity (0 = Black, 255 = White)&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">show&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://shrsv.github.io/p/tensors-challenge/5.png"
+width="526"
+height="455"
+srcset="https://shrsv.github.io/p/tensors-challenge/5_hu_88ddac4ebabc55d7.png 480w, https://shrsv.github.io/p/tensors-challenge/5_hu_f6c77eaceb843da9.png 1024w"
+loading="lazy"
+alt="grayscale bg"
+class="gallery-image"
+data-flex-grow="115"
+data-flex-basis="277px"
+>&lt;/p>
+&lt;p>Visualization:&lt;/p>
+&lt;ul>
+&lt;li>Uniform gray: All 128.&lt;/li>
+&lt;li>Axes: 5x5 grid.&lt;/li>
+&lt;/ul>
+&lt;p>Explanation:&lt;/p>
+&lt;ul>
+&lt;li>A 2D tensor for a medium gray background.&lt;/li>
+&lt;/ul>
+&lt;h2 id="drawing-a-red-0">Drawing a Red &amp;ldquo;0&amp;rdquo;
+&lt;/h2>&lt;p>Now, draw a red &amp;ldquo;0&amp;rdquo; on the 5x5 background using a 3D tensor. We’ll define &amp;ldquo;0&amp;rdquo; as a small oval.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Define &amp;#34;0&amp;#34; as an oval in 5x5 grid&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">zero_positions&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">)]&lt;/span> &lt;span class="c1"># Oval shape&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Initialize 5x5 RGB channels&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">red_channel&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[[&lt;/span>&lt;span class="mi">0&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">_&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">)]&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">_&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">green_channel&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[[&lt;/span>&lt;span class="mi">0&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">_&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">)]&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">_&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">blue_channel&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[[&lt;/span>&lt;span class="mi">0&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">_&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">)]&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">_&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Set red &amp;#34;0&amp;#34; pixels&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">for&lt;/span> &lt;span class="n">pos&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">zero_positions&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">red_channel&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">pos&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]][&lt;/span>&lt;span class="n">pos&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">255&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Set grayscale background (RGB = 128, 128, 128)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">j&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">j&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">zero_positions&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">red_channel&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="n">j&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">128&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">green_channel&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="n">j&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">128&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">blue_channel&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="n">j&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">128&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Combine into 3D tensor&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">color_image&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">red_channel&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">green_channel&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">blue_channel&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">color_image_array&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">stack&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">color_image&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">axis&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Visualize&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">imshow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">color_image_array&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Red &amp;#39;0&amp;#39; on Grayscale Background&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">xlabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Column&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ylabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Row&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">show&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://shrsv.github.io/p/tensors-challenge/6.png"
+width="427"
+height="455"
+srcset="https://shrsv.github.io/p/tensors-challenge/6_hu_90dc0fcc492d06ac.png 480w, https://shrsv.github.io/p/tensors-challenge/6_hu_6b222cf7835ed10c.png 1024w"
+loading="lazy"
+alt="red 0 on gray"
+class="gallery-image"
+data-flex-grow="93"
+data-flex-basis="225px"
+>&lt;/p>
+&lt;h3 id="visualization">Visualization:
+&lt;/h3>&lt;ul>
+&lt;li>&lt;strong>Image&lt;/strong>: A red oval &amp;ldquo;0&amp;rdquo; on gray.&lt;/li>
+&lt;li>&lt;strong>Red pixels&lt;/strong>: RGB = (255, 0, 0) at zero_positions.&lt;/li>
+&lt;li>&lt;strong>Gray background&lt;/strong>: RGB = (128, 128, 128) elsewhere.&lt;/li>
+&lt;li>&lt;strong>Axes&lt;/strong>: 5x5 grid.&lt;/li>
+&lt;/ul>
+&lt;h3 id="explanation">Explanation:
+&lt;/h3>&lt;ul>
+&lt;li>&lt;strong>New zero_positions&lt;/strong>: Forms a rough oval:
+&lt;ul>
+&lt;li>Top: (1,1), (1,2), (1,3)&lt;/li>
+&lt;li>Sides: (2,1), (2,3)&lt;/li>
+&lt;li>Bottom: (3,1), (3,2), (3,3)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>This 5x5x3 tensor places red where the &amp;ldquo;0&amp;rdquo; is and gray everywhere else.&lt;/li>
+&lt;/ul>
+&lt;h2 id="conclusion">Conclusion
+&lt;/h2>&lt;p>So - that&amp;rsquo;s it.&lt;/p>
+&lt;p>We progressed from:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Scalars&lt;/strong>: Pixel intensities.&lt;/li>
+&lt;li>&lt;strong>Vectors&lt;/strong>: Rows of pixels.&lt;/li>
+&lt;li>&lt;strong>Matrices&lt;/strong>: Grayscale images.&lt;/li>
+&lt;li>&lt;strong>3D Tensors&lt;/strong>: Color images.&lt;/li>
+&lt;/ul>
+&lt;p>At each step, we visualized the data to understand its structure and content.&lt;/p>
+&lt;p>Hope this gave you a good intuition about tensors!&lt;/p></description></item></channel></rss>
