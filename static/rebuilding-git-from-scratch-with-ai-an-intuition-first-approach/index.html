@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Rebuilding Git From Scratch with AI: An Intuition-First Approach</title>
+	<meta name="description" content="Join the Rebuilding Git From Scratch with AI: An Intuition-First Approach launch list for early access, meaningful product notes, and rollout updates worth opening." />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+	<style>
+		:root {
+			--bg: #f4efe6;
+			--bg-strong: #eadfcd;
+			--panel: rgba(255, 250, 242, 0.78);
+			--panel-strong: rgba(255, 252, 247, 0.94);
+			--ink: #1f1a16;
+			--muted: #62564b;
+			--line: rgba(41, 30, 18, 0.12);
+			--accent: #ba4a2f;
+			--accent-dark: #842a15;
+			--accent-soft: rgba(186, 74, 47, 0.12);
+			--shadow: 0 30px 80px rgba(95, 60, 26, 0.16);
+			--radius-xl: 28px;
+			--radius-lg: 20px;
+			--radius-md: 14px;
+		}
+
+		* { box-sizing: border-box; }
+		html, body { min-height: 100%; }
+
+		body {
+			margin: 0;
+			font-family: "Space Grotesk", sans-serif;
+			color: var(--ink);
+			background:
+				radial-gradient(circle at top left, rgba(255,255,255,0.85), transparent 34%),
+				radial-gradient(circle at 85% 15%, rgba(186, 74, 47, 0.18), transparent 22%),
+				linear-gradient(135deg, #f7f2e9 0%, #efe3d2 52%, #e7d5bf 100%);
+		}
+
+		body::before,
+		body::after {
+			content: "";
+			position: fixed;
+			inset: auto;
+			width: 42vw;
+			height: 42vw;
+			border-radius: 999px;
+			z-index: 0;
+			pointer-events: none;
+			filter: blur(30px);
+			opacity: 0.4;
+		}
+
+		body::before {
+			top: -12vw;
+			right: -10vw;
+			background: rgba(255, 235, 200, 0.95);
+		}
+
+		body::after {
+			bottom: -18vw;
+			left: -8vw;
+			background: rgba(193, 96, 61, 0.18);
+		}
+
+		.page {
+			position: relative;
+			z-index: 1;
+			width: min(1180px, calc(100vw - 32px));
+			margin: 0 auto;
+			padding: 28px 0 56px;
+		}
+
+		.frame {
+			position: relative;
+			overflow: hidden;
+			border: 1px solid rgba(255, 255, 255, 0.58);
+			border-radius: 36px;
+			background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0.22));
+			box-shadow: var(--shadow);
+			backdrop-filter: blur(16px);
+		}
+
+		.frame::before {
+			content: "";
+			position: absolute;
+			inset: 24px 24px auto auto;
+			width: 180px;
+			height: 180px;
+			border-radius: 24px;
+			transform: rotate(18deg);
+			background: linear-gradient(135deg, rgba(186,74,47,0.12), rgba(255,255,255,0.05));
+			border: 1px solid rgba(186,74,47,0.18);
+		}
+
+		.grid {
+			display: grid;
+			grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.95fr);
+			gap: 28px;
+			padding: 32px;
+		}
+
+		.hero,
+		.panel {
+			position: relative;
+			z-index: 1;
+		}
+
+		.hero {
+			padding: 28px;
+			border-radius: var(--radius-xl);
+			background: linear-gradient(180deg, rgba(255,255,255,0.42), rgba(255,255,255,0.08));
+			border: 1px solid rgba(255,255,255,0.48);
+			min-height: 100%;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.eyebrow {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			padding: 8px 12px;
+			border-radius: 999px;
+			background: rgba(255, 250, 242, 0.72);
+			border: 1px solid rgba(186, 74, 47, 0.2);
+			color: var(--accent-dark);
+			font-size: 0.82rem;
+			font-weight: 700;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+		}
+
+		.eyebrow::before {
+			content: "";
+			width: 10px;
+			height: 10px;
+			border-radius: 999px;
+			background: var(--accent);
+			box-shadow: 0 0 0 6px rgba(186, 74, 47, 0.14);
+		}
+
+		h1 {
+			margin: 22px 0 16px;
+			max-width: 12ch;
+			font-family: "Fraunces", serif;
+			font-size: clamp(3rem, 7vw, 5.8rem);
+			line-height: 0.94;
+			letter-spacing: -0.04em;
+		}
+
+		.subtitle {
+			margin: 0;
+			max-width: 56ch;
+			font-size: 1.05rem;
+			line-height: 1.75;
+			color: var(--muted);
+		}
+
+		.bullet-grid {
+			margin-top: 28px;
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 14px;
+		}
+
+		.bullet {
+			padding: 16px;
+			border-radius: 18px;
+			background: rgba(255, 251, 245, 0.68);
+			border: 1px solid var(--line);
+		}
+
+		.bullet strong {
+			display: block;
+			margin-bottom: 8px;
+			font-size: 0.95rem;
+		}
+
+		.bullet span {
+			color: var(--muted);
+			font-size: 0.92rem;
+			line-height: 1.55;
+		}
+
+		.panel {
+			padding: 24px;
+			border-radius: var(--radius-xl);
+			background: var(--panel-strong);
+			border: 1px solid rgba(255,255,255,0.72);
+			box-shadow: 0 18px 44px rgba(58, 32, 15, 0.08);
+			align-self: center;
+		}
+
+		.panel-head {
+			margin-bottom: 22px;
+		}
+
+		.panel-kicker {
+			display: inline-block;
+			margin-bottom: 10px;
+			color: var(--accent-dark);
+			font-size: 0.85rem;
+			font-weight: 700;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+		}
+
+		.panel h2 {
+			margin: 0;
+			font-family: "Fraunces", serif;
+			font-size: 2.05rem;
+			line-height: 1.05;
+		}
+
+		.panel-copy {
+			margin: 10px 0 0;
+			color: var(--muted);
+			line-height: 1.7;
+		}
+
+		form {
+			display: grid;
+			gap: 16px;
+		}
+
+		label {
+			display: grid;
+			gap: 8px;
+			font-size: 0.92rem;
+			font-weight: 600;
+			color: var(--ink);
+		}
+
+		input {
+			width: 100%;
+			appearance: none;
+			border: 1px solid rgba(49, 35, 22, 0.14);
+			border-radius: 16px;
+			padding: 15px 16px;
+			background: rgba(255,255,255,0.92);
+			color: var(--ink);
+			font: inherit;
+			transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+		}
+
+		input:focus {
+			outline: none;
+			border-color: rgba(186, 74, 47, 0.55);
+			box-shadow: 0 0 0 5px rgba(186, 74, 47, 0.12);
+			transform: translateY(-1px);
+		}
+
+		.nonce-wrap {
+			position: absolute;
+			left: -10000px;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+		}
+
+		.submit-row {
+			display: grid;
+			gap: 12px;
+			margin-top: 4px;
+		}
+
+		button {
+			appearance: none;
+			border: 0;
+			border-radius: 18px;
+			padding: 16px 18px;
+			background: linear-gradient(135deg, var(--accent), #c66742 62%, #d18e61 100%);
+			color: white;
+			font: inherit;
+			font-weight: 700;
+			letter-spacing: 0.01em;
+			cursor: pointer;
+			box-shadow: 0 18px 30px rgba(186, 74, 47, 0.22);
+			transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+		}
+
+		button:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 24px 36px rgba(186, 74, 47, 0.25);
+		}
+
+		button:disabled {
+			cursor: wait;
+			opacity: 0.75;
+			transform: none;
+			box-shadow: 0 12px 20px rgba(186, 74, 47, 0.14);
+		}
+
+		.trust {
+			margin: 0;
+			padding-top: 4px;
+			border-top: 1px solid var(--line);
+			color: var(--muted);
+			font-size: 0.92rem;
+			line-height: 1.65;
+		}
+
+		.captcha-shell {
+			padding-top: 4px;
+		}
+
+		.error {
+			min-height: 1.4em;
+			color: #972d17;
+			font-size: 0.9rem;
+			font-weight: 600;
+			margin: 0;
+		}
+
+		.footer-note {
+			margin-top: 16px;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			font-size: 0.88rem;
+			color: var(--muted);
+		}
+
+		.footer-note::before {
+			content: "";
+			width: 7px;
+			height: 7px;
+			border-radius: 999px;
+			background: var(--accent);
+			flex: 0 0 auto;
+		}
+
+		@media (max-width: 960px) {
+			.grid {
+				grid-template-columns: 1fr;
+				padding: 18px;
+			}
+
+			.hero,
+			.panel {
+				padding: 22px;
+			}
+
+			.bullet-grid {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		@media (max-width: 640px) {
+			.page {
+				width: min(100vw - 16px, 1180px);
+				padding: 8px 0 24px;
+			}
+
+			.frame {
+				border-radius: 24px;
+			}
+
+			h1 {
+				max-width: none;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div id="app"></div>
+
+	<noscript>
+		<main class="page">
+			<section class="frame">
+				<div class="grid">
+					<section class="hero">
+						<div>
+							<span class="eyebrow">New Release</span>
+							<h1>Rebuilding Git From Scratch with AI: An Intuition-First Approach</h1>
+							<p class="subtitle">Join the Rebuilding Git From Scratch with AI: An Intuition-First Approach launch list for early access, meaningful product notes, and rollout updates worth opening.</p>
+						</div>
+					</section>
+					<aside class="panel">
+						<div class="panel-head">
+							<span class="panel-kicker">Stay in the loop</span>
+							<h2>Get the rollout notes first.</h2>
+							<p class="panel-copy">Just your name and email to join.</p>
+						</div>
+						<form method="post" action="https://lm.hexmos.com/subscription/form">
+							<input type="hidden" name="l" value="c4870ca8-85fa-409f-9da6-032e661661ff" />
+							<div class="nonce-wrap" aria-hidden="true">
+								<label>Leave this field empty
+									<input type="text" name="nonce" value="" tabindex="-1" autocomplete="off" />
+								</label>
+							</div>
+							<label>
+								Name
+								<input type="text" name="name" placeholder="Ada Lovelace" />
+							</label>
+							<label>
+								Email
+								<input type="email" name="email" placeholder="you@company.com" required />
+							</label>
+
+							<div class="submit-row">
+								<button type="submit">Join the list</button>
+								<p class="trust">No spam. Useful updates only. Unsubscribe whenever you want.</p>
+							</div>
+						</form>
+					</aside>
+				</div>
+			</section>
+		</main>
+	</noscript>
+
+	<script type="module">
+		import { h, render } from "https://esm.sh/preact@10.26.4";
+		import { useEffect, useState } from "https://esm.sh/preact@10.26.4/hooks";
+		import htm from "https://esm.sh/htm@3.1.1";
+
+		const html = htm.bind(h);
+			const copy = {
+			eyebrow: "New Release",
+			title: "Rebuilding Git From Scratch with AI: An Intuition-First Approach",
+			subtitle: "Join the Rebuilding Git From Scratch with AI: An Intuition-First Approach launch list for early access, meaningful product notes, and rollout updates worth opening.",
+			ctaLabel: "Join the list",
+			footnote: "No spam. Useful updates only. Unsubscribe whenever you want.",
+			actionUrl: "https://lm.hexmos.com/subscription/form",
+			listUuid: "c4870ca8-85fa-409f-9da6-032e661661ff",
+			  captchaMarkup: "",
+		};
+
+		const bullets = [
+			{ title: "Early access", body: "Get launch windows, invite drops, and feature openings before the broader crowd does." },
+			{ title: "Useful product notes", body: "Receive updates with signal: shipping details, not inbox filler." },
+			{ title: "One clean channel", body: "Everything for this launch in one place, with easy unsubscribe controls." },
+		];
+
+		function SignupCard() {
+			const [name, setName] = useState("");
+			const [email, setEmail] = useState("");
+			const [isSubmitting, setIsSubmitting] = useState(false);
+			const [error, setError] = useState("");
+
+			useEffect(() => {
+				const params = new URLSearchParams(window.location.search);
+				if (params.get("error")) {
+					setError("Something went wrong. Please check your information and try again.");
+				}
+			}, []);
+
+			function handleSubmit(event) {
+				if (!email.trim()) {
+					event.preventDefault();
+					setError("Email is required.");
+					return;
+				}
+
+				setError("");
+				setIsSubmitting(true);
+			}
+
+			return html`
+				<aside class="panel">
+					<div class="panel-head">
+						<span class="panel-kicker">Stay in the loop</span>
+						<h2>Get the rollout notes first.</h2>
+						<p class="panel-copy">Just your name and email to join.</p>
+					</div>
+
+					<form method="post" action=${copy.actionUrl} onSubmit=${handleSubmit}>
+						<input type="hidden" name="l" value=${copy.listUuid} />
+
+						<div class="nonce-wrap" aria-hidden="true">
+							<label>
+								Leave this field empty
+								<input type="text" name="nonce" value="" tabIndex="-1" autoComplete="off" />
+							</label>
+						</div>
+
+						<label>
+							Name
+							<input
+								type="text"
+								name="name"
+								placeholder="Ada Lovelace"
+								value=${name}
+								onInput=${(event) => setName(event.currentTarget.value)}
+							/>
+						</label>
+
+						<label>
+							Email
+							<input
+								type="email"
+								name="email"
+								placeholder="you@company.com"
+								required
+								value=${email}
+								onInput=${(event) => setEmail(event.currentTarget.value)}
+							/>
+						</label>
+
+						${copy.captchaMarkup ? html`<div dangerouslySetInnerHTML=${{ __html: copy.captchaMarkup }} />` : null}
+
+						<p class="error" role="status" aria-live="polite">${error}</p>
+
+						<div class="submit-row">
+							<button type="submit" disabled=${isSubmitting}>
+								${isSubmitting ? "Submitting..." : copy.ctaLabel}
+							</button>
+							<p class="trust">${copy.footnote}</p>
+						</div>
+					</form>
+				</aside>
+			`;
+		}
+
+		function App() {
+			return html`
+				<main class="page">
+					<section class="frame">
+						<div class="grid">
+							<section class="hero">
+								<div>
+									<span class="eyebrow">${copy.eyebrow}</span>
+									<h1>${copy.title}</h1>
+									<p class="subtitle">${copy.subtitle}</p>
+								</div>
+
+								<div>
+									<div class="bullet-grid">
+										${bullets.map((item) => html`
+											<article class="bullet">
+												<strong>${item.title}</strong>
+												<span>${item.body}</span>
+											</article>
+										`)}
+									</div>
+									<p class="footer-note">Secure signup form.</p>
+								</div>
+							</section>
+							<${SignupCard} />
+						</div>
+					</section>
+				</main>
+			`;
+		}
+
+				render(html`<${App} />`, document.getElementById("app"));
+	</script>
+
+</body>
+</html>

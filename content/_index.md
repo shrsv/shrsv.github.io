@@ -1,4 +1,5 @@
 ---
+title: shrsv
 menu:
     main:
         name: Home
@@ -6,3 +7,5 @@ menu:
         params:
             icon: home
 ---
+
+Founder @ [Hexmos](https://hexmos.com)
